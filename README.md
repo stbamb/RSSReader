@@ -1,4 +1,4 @@
-RSSNewsReader
+RSSReader
 ==========
 
 Proyecto II || TEC
