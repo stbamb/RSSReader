@@ -1,0 +1,4 @@
+Wireframes:
+1)Login (Login -> Feed -> Información extra)
+2)Signup (Signup -> Agregar intereses -> Feed)
+3)Feed (Feed -> Información extra)

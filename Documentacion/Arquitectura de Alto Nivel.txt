@@ -1,0 +1,11 @@
+Descripción de arquitectura de alto nivel:
+
+Categorías:
+
+	Tecnología
+	Carros
+	Celulares
+	Noticias/Sucesos
+	Otros por agregar
+
+RIA

@@ -1,0 +1,12 @@
+Descripción detallada de arquitectura:
+
+Clases:
+
+	Usuario(FacebookID/ID, Nombre, Email, País, CategoríasFavoritas[], Foto)
+	Categoría(IDCategoría, Nombre, PaísOrigen, Idioma)
+
+Tablas Base de Datos:
+
+	Usuario(IDUsuario, Nombre, Email, País, Foto)
+	Categoría(IDCategoría, Nombre, PaísOrigen)
+	FotoEvento(IDUsuario, Foto)

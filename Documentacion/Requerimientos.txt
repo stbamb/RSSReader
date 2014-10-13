@@ -1,0 +1,23 @@
+Requerimientos Funcionales:
+
+01.	Login/Signup
+02.	Seleccionar intereses
+03.	Visualizar noticias
+04.	Navegar por noticias
+05.	Seleccionar noticias
+06.	Visualizar información extra de noticias
+07.	Ir directamente a la noticia en la página
+08.	Dar like o dislike a cada noticia
+09.	Recomendar noticias basadas en likes
+10.	Usar animaciones
+11.	Agregar fuentes nuevas
+
+Requerimientos No Funcionales:
+
+01. Seguridad
+02. Base de datos (Usuarios, Gustos)
+03. Conectarse Facebook
+04. Conectarse a Google Maps
+05. Conectarse a Youtube
+06. Uso de GPS
+
