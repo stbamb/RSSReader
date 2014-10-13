@@ -2,3 +2,7 @@ Wireframes:
 1)Login (Login -> Feed -> Información extra)
 2)Signup (Signup -> Agregar intereses -> Feed)
 3)Feed (Feed -> Información extra)
+
+Patrón Master-Detail para el punto 3
+ListView para visualización del feed de noticias
+Form para punto 1 y 3
