@@ -1,4 +1,4 @@
-RSS-Reader
+RSSReader
 ==========
 
 Proyecto II
