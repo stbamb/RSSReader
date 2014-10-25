@@ -13,6 +13,7 @@ public class RSSItem implements Serializable {
     private String _date = null;
     private String _image = null;
     private String _link = null;
+    private String _source_page;
     private boolean _seen = false;
 
     public void setTitle(String title) {
@@ -63,4 +64,11 @@ public class RSSItem implements Serializable {
         return _seen;
     }
 
+    public String get_source_page() {
+        return _source_page;
+    }
+
+    public void set_source_page(String _source_page) {
+        this._source_page = _source_page;
+    }
 }

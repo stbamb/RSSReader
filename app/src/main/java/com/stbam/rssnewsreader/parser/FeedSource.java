@@ -33,8 +33,8 @@ public class FeedSource {
         return aceptado;
     }
 
-    public void setAceptado() {
-        aceptado = true;
+    public void setAceptado(boolean aceptado) {
+        this.aceptado = aceptado;
     }
 
     public String getURL() {

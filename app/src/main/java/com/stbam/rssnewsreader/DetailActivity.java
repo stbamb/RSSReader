@@ -11,7 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ShareActionProvider;
+import android.widget.TextView;
 
 import com.stbam.rssnewsreader.parser.RSSFeed;
 
@@ -21,12 +23,14 @@ public class DetailActivity extends FragmentActivity {
 	int pos;
 	private DescAdapter adapter;
 	private ViewPager pager;
-	private ShareActionProvider mShareActionProvider;
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail);
+
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -39,6 +43,7 @@ public class DetailActivity extends FragmentActivity {
 		adapter = new DescAdapter(getSupportFragmentManager());
 		pager = (ViewPager) findViewById(R.id.pager);
 
+
 		// Set Adapter to pager:
 		pager.setAdapter(adapter);
 		pager.setCurrentItem(pos);
@@ -48,23 +53,6 @@ public class DetailActivity extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		new MenuInflater(this).inflate(R.menu.activity_desc, menu);
-
-		// Locate MenuItem with ShareActionProvider
-		MenuItem shareItem = menu.findItem(R.id.share_option);
-
-		// Fetch and store ShareActionProvider
-		mShareActionProvider = (ShareActionProvider) shareItem
-				.getActionProvider();
-
-		Intent shareIntent = new Intent(Intent.ACTION_SEND);
-		shareIntent.setType("text/plain");
-		shareIntent.putExtra(Intent.EXTRA_SUBJECT, "RSS Reader");
-		String shareBody = feed.getItem(pos).getTitle() + "\n"
-				+ feed.getItem(pos).getDescription();
-		shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-
-		// Set the share intent
-		mShareActionProvider.setShareIntent(shareIntent);
 
 		return true;
 	}

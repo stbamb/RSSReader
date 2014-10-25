@@ -22,6 +22,12 @@ public class RSSFeed implements Serializable {
         _itemCount++;
     }
 
+    public void emptyFeed()
+    {
+        _itemList.clear();
+        _itemCount = 0;
+    }
+
     public RSSItem getItem(int location) {
         return (RSSItem) _itemList.get(location);
     }

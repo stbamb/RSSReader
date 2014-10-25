@@ -2,8 +2,12 @@ package com.stbam.rssnewsreader.parser;
 
 import android.util.Log;
 
+import com.stbam.rssnewsreader.SplashActivity;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.jsoup.Jsoup;
@@ -21,13 +25,13 @@ public class DOMParser {
 
     private RSSFeed _feed = new RSSFeed();
 
-    public RSSFeed parseXml(String xml) {
+    public RSSFeed parseXml(String xml, String nombre) {
 
         URL url = null;
         try {
             url = new URL(xml);
         } catch (MalformedURLException e1) {
-            e1.printStackTrace();
+            //e1.printStackTrace();
         }
 
         try {
@@ -66,6 +70,7 @@ public class DOMParser {
                             .parse(html);
                     Elements imgEle = docHtml.select("img");
                     entry.setImage(imgEle.attr("src"));
+                    entry.set_source_page(nombre);
 
                     //Log.d("Formato fecha:", entry.getDate());
 

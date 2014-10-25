@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
     ListView lv;
     CustomListAdapter adapter;
     public static ArrayList<FeedSource> feedLink;
+    public static boolean empiezaVacio;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // set the feed link for refresh
-        feedLink = new SplashActivity().lista_sources;
+        feedLink = new SplashActivity().lista_sources2;
 
         // Get feed form the file
         feed = (RSSFeed) getIntent().getExtras().get("feed");
@@ -56,6 +57,8 @@ public class MainActivity extends Activity {
         adapter = new CustomListAdapter(this);
         if (feed != null)
             lv.setAdapter(adapter);
+        else
+            empiezaVacio = true;
 
         // Set on item click listener to the ListView
         lv.setOnItemClickListener(new OnItemClickListener() {
@@ -121,13 +124,27 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 DOMParser tmpDOMParser = new DOMParser();
-
+                feed = null;
                 int itemes_feed = feedLink.size();
+
+                boolean todoNulo = true;
 
                 for (int i = 0; i < itemes_feed; i++)
                 {
-                    if (feedLink.get(i).isAceptado())
-                        feed = tmpDOMParser.parseXml(feedLink.get(i).getURL());
+                    FeedSource s = feedLink.get(i);
+                    if (s.isAceptado())
+                    {
+                        feed = tmpDOMParser.parseXml(s.getURL(), s.getNombre());
+                        todoNulo = false;
+                    }
+                }
+
+                if (todoNulo)
+                    feed = null;
+
+                for (int i = 0; i < feedLink.size(); i++)
+                {
+                    Log.d("Nombre/Aceptado", "" + feedLink.get(i).getNombre() +  "/" + feedLink.get(i).isAceptado());
                 }
 
                 MainActivity.this.runOnUiThread(new Runnable() {
@@ -135,8 +152,11 @@ public class MainActivity extends Activity {
                     @Override
                     public void run() {
                         if (feed != null && feed.getItemCount() > 0) {
-                            adapter.notifyDataSetChanged();
-                            //item.setActionView(null);
+
+                            if (empiezaVacio)
+                                lv.setAdapter(adapter);
+                            else
+                                adapter.notifyDataSetChanged();
 
                             item.setEnabled(false);
                             new CountDownTimer(3000, 1000) {
@@ -150,6 +170,8 @@ public class MainActivity extends Activity {
                             }
                             }.start();
                         }
+                        else if (feed == null)
+                            lv.setAdapter(null);
                     }
                 });
             }
@@ -213,10 +235,10 @@ public class MainActivity extends Activity {
             imageLoader.DisplayImage(feed.getItem(pos).getImage(), iv);
             tvTitle.setText(feed.getItem(pos).getTitle());
             if (feed.getItem(pos).isSeen()) {
-                tvDate.setText(feed.getItem(pos).getDate() + " Seen");
+                tvDate.setText(feed.getItem(pos).get_source_page() + "\t" + "Seen");
             }
             else
-                tvDate.setText(feed.getItem(pos).getDate() + " Unseen");
+                tvDate.setText(feed.getItem(pos).get_source_page() + "\t" + "Unseen");
 
             return listItem;
         }

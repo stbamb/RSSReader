@@ -33,19 +33,19 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_fragment, container, false);
-        // Initializr views
+
         TextView title = (TextView)view.findViewById(R.id.title);
         WebView desc = (WebView)view.findViewById(R.id.desc);
-        // Enable the vertical fading edge (by default it is disabled)
         ScrollView sv = (ScrollView)view.findViewById(R.id.sv);
         sv.setVerticalFadingEdgeEnabled(true);
-        // Set webview properties
+
+
+        // todas las propiedades del WebView
+
         WebSettings ws = desc.getSettings();
-        ws.setLightTouchEnabled(false);
-        ws.setPluginState(PluginState.ON);
         ws.setJavaScriptEnabled(true);
         ws.setLoadWithOverviewMode(true);
-        ws.setUseWideViewPort(true);
+        ws.setUseWideViewPort(false);
         ws.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         ws.setBuiltInZoomControls(false);
         ws.setSupportZoom(false);
