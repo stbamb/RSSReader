@@ -24,8 +24,6 @@ public class DetailActivity extends FragmentActivity {
 	private DescAdapter adapter;
 	private ViewPager pager;
 
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
