@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,19 +16,49 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Toast;
-
-import com.stbam.rssnewsreader.parser.DOMParser;
-import com.stbam.rssnewsreader.parser.RSSFeed;
+import android.util.Log;
+import com.stbam.rssnewsreader.parser.*;
 
 public class SplashActivity extends Activity {
 
-	String RSSFEEDURL = "http://feeds.gawker.com/lifehacker/full";
+    // llamar a la funcion que recolecta los JSON y los convierte en instancias
+    // de la clase FeedSource
+
+    /*int largo = 0;
+
+    for (int i = 0; i < largo; i++)
+    {
+        FeedSource nuevo = new FeedSource();
+        nuevo.setURL();
+        nuevo.setNombre();
+        nuevo.setCategoria();
+        nuevo.setIdioma();
+    }*/
+
+    public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
 	RSSFeed feed;
 	String fileName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
+        FeedSource fuente = new FeedSource();
+
+        fuente.setURL("http://www.theverge.com/rss/frontpage");
+        fuente.setNombre("The Verge");
+        fuente.setCategoria("Tecnologia");
+        fuente.setIdioma("English");
+
+        FeedSource fuente2 = new FeedSource();
+
+        fuente2.setURL("http://www.polygon.com/rss/index.xml");
+        fuente2.setNombre("Polygon");
+        fuente2.setCategoria("Gaming");
+        fuente2.setIdioma("English");
+
+        lista_sources.add(fuente);
+        lista_sources.add(fuente2);
+
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.splash);
@@ -34,6 +66,8 @@ public class SplashActivity extends Activity {
 		fileName = "TDRSSFeed.td";
 
 		File feedFile = getBaseContext().getFileStreamPath(fileName);
+
+        //Log.d("Path de archivo", feedFile.getAbsolutePath());
 
 		ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (conMgr.getActiveNetworkInfo() == null) {
@@ -46,7 +80,7 @@ public class SplashActivity extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMessage(
 						"Unable to reach server, \nPlease check your connectivity.")
-						.setTitle("TD RSS Reader")
+						.setTitle("RSS Reader")
 						.setCancelable(false)
 						.setPositiveButton("Exit",
 								new DialogInterface.OnClickListener() {
@@ -61,11 +95,6 @@ public class SplashActivity extends Activity {
 				alert.show();
 			} else {
 
-				// No connectivty and file exists: Read feed from the File
-				Toast toast = Toast.makeText(this,
-						"No connectivity! Reading last update...",
-						Toast.LENGTH_LONG);
-				toast.show();
 				feed = ReadFeed(fileName);
 				startLisActivity(feed);
 			}
@@ -101,7 +130,15 @@ public class SplashActivity extends Activity {
 
 			// Obtain feed
 			DOMParser myParser = new DOMParser();
-			feed = myParser.parseXml(RSSFEEDURL);
+
+            //esto sirve para que recolecte todos los links
+
+            for (int i = 0; i < lista_sources.size(); i++)
+            {
+                if (lista_sources.get(i).isAceptado())
+                    feed = myParser.parseXml(lista_sources.get(i).getURL());
+            }
+
 			if (feed != null && feed.getItemCount() > 0)
 				WriteFeed(feed);
 			return null;
@@ -131,14 +168,14 @@ public class SplashActivity extends Activity {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		finally {
 			try {
 				fOut.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
@@ -162,14 +199,14 @@ public class SplashActivity extends Activity {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		finally {
 			try {
 				fIn.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 

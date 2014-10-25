@@ -78,7 +78,7 @@ public class ImageLoader {
 			bitmap = decodeFile(f);
 			return bitmap;
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			if (ex instanceof OutOfMemoryError)
 				memoryCache.clear();
 			return null;
@@ -117,7 +117,7 @@ public class ImageLoader {
 			return bitmap;
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return null;
 	}
@@ -153,7 +153,7 @@ public class ImageLoader {
 				Activity a = (Activity) photoToLoad.imageView.getContext();
 				a.runOnUiThread(bd);
 			} catch (Throwable th) {
-				th.printStackTrace();
+				//th.printStackTrace();
 			}
 		}
 	}

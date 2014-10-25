@@ -1,14 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">RSS Reader</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="loading">Loading&#8230;</string>
+    <string name="loading">Loading…</string>
     <string name="title">Title goes here!</string>
     <string name="date">Date goes here!</string>
+    <string name="seen">Seen status goes here!</string>
     <string name="desc">Description goes here!</string>
     <string name="linkLabel">Link to web: </string>
     <string name="linkText">Link goes here!</string>
+    <string name="title_activity_add">AddActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

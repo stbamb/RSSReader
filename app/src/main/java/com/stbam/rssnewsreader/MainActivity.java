@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,14 +23,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.stbam.rssnewsreader.image.ImageLoader;
 import com.stbam.rssnewsreader.parser.DOMParser;
+import com.stbam.rssnewsreader.parser.FeedSource;
 import com.stbam.rssnewsreader.parser.RSSFeed;
+import com.stbam.rssnewsreader.parser.RSSItem;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
     RSSFeed feed;
     ListView lv;
     CustomListAdapter adapter;
-    String feedLink;
+    public static ArrayList<FeedSource> feedLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +43,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // set the feed link for refresh
-        feedLink = new SplashActivity().RSSFEEDURL;
+        feedLink = new SplashActivity().lista_sources;
 
         // Get feed form the file
         feed = (RSSFeed) getIntent().getExtras().get("feed");
@@ -48,7 +54,8 @@ public class MainActivity extends Activity {
 
         // Set an Adapter to the ListView
         adapter = new CustomListAdapter(this);
-        lv.setAdapter(adapter);
+        if (feed != null)
+            lv.setAdapter(adapter);
 
         // Set on item click listener to the ListView
         lv.setOnItemClickListener(new OnItemClickListener() {
@@ -58,6 +65,10 @@ public class MainActivity extends Activity {
                                     long arg3) {
                 // actions to be performed when a list item clicked
                 int pos = arg2;
+
+                // llamar a la funcion que marca el articulo como leido
+
+                marcarLeido(pos);
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("feed", feed);
@@ -69,6 +80,11 @@ public class MainActivity extends Activity {
             }
         });
 
+    }
+
+    public void marcarLeido(int pos)
+    {
+        feed.getItem(pos).setSeen();
     }
 
     @Override
@@ -84,34 +100,35 @@ public class MainActivity extends Activity {
                 refreshList(item);
                 return (true);
 
-            case R.id.about_option:
-                Toast.makeText(this, "App developed by stbam", Toast.LENGTH_SHORT).show();
-                return (true);
+            case R.id.add_option:
+                startAddActivity();
+                return true;
 
         }
         return super.onOptionsItemSelected(item);
     }
 
+    public void startAddActivity()
+    {
+        Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        startActivity(intent);
+        //this.finish();
+    }
     public void refreshList(final MenuItem item) {
-		/* Attach a rotating ImageView to the refresh item as an ActionView */
-        LayoutInflater inflater = (LayoutInflater) getApplication()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ImageView iv = (ImageView) inflater.inflate(R.layout.action_refresh,
-                null);
-
-        Animation rotation = AnimationUtils.loadAnimation(getApplication(),
-                R.anim.refresh_rotate);
-        rotation.setRepeatCount(Animation.INFINITE);
-        iv.startAnimation(rotation);
-
-        item.setActionView(iv);
 
         // trigger feed refresh:
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 DOMParser tmpDOMParser = new DOMParser();
-                feed = tmpDOMParser.parseXml(feedLink);
+
+                int itemes_feed = feedLink.size();
+
+                for (int i = 0; i < itemes_feed; i++)
+                {
+                    if (feedLink.get(i).isAceptado())
+                        feed = tmpDOMParser.parseXml(feedLink.get(i).getURL());
+                }
 
                 MainActivity.this.runOnUiThread(new Runnable() {
 
@@ -119,9 +136,19 @@ public class MainActivity extends Activity {
                     public void run() {
                         if (feed != null && feed.getItemCount() > 0) {
                             adapter.notifyDataSetChanged();
-                            // lv.setAdapter(adapter);
-                            item.getActionView().clearAnimation();
-                            item.setActionView(null);
+                            //item.setActionView(null);
+
+                            item.setEnabled(false);
+                            new CountDownTimer(3000, 1000) {
+
+                                public void onTick(long millisUntilFinished) {
+
+                                }
+
+                            public void onFinish() {
+                                item.setEnabled(true);
+                            }
+                            }.start();
                         }
                     }
                 });
@@ -185,7 +212,11 @@ public class MainActivity extends Activity {
             // Set the views in the layout
             imageLoader.DisplayImage(feed.getItem(pos).getImage(), iv);
             tvTitle.setText(feed.getItem(pos).getTitle());
-            tvDate.setText(feed.getItem(pos).getDate());
+            if (feed.getItem(pos).isSeen()) {
+                tvDate.setText(feed.getItem(pos).getDate() + " Seen");
+            }
+            else
+                tvDate.setText(feed.getItem(pos).getDate() + " Unseen");
 
             return listItem;
         }

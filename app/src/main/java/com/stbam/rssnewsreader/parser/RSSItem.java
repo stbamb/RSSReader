@@ -12,21 +12,31 @@ public class RSSItem implements Serializable {
     private String _description = null;
     private String _date = null;
     private String _image = null;
+    private String _link = null;
+    private boolean _seen = false;
 
-    void setTitle(String title) {
+    public void setTitle(String title) {
         _title = title;
     }
 
-    void setDescription(String description) {
+    public void setDescription(String description) {
         _description = description;
     }
 
-    void setDate(String pubDate) {
+    public void setDate(String pubDate) {
         _date = pubDate;
     }
 
-    void setImage(String image) {
+    public void setImage(String image) {
         _image = image;
+    }
+
+    public void setLink(String link) {
+        _link = link;
+    }
+
+    public void setSeen() {
+        _seen = true;
     }
 
     public String getTitle() {
@@ -43,6 +53,14 @@ public class RSSItem implements Serializable {
 
     public String getImage() {
         return _image;
+    }
+
+    public String getLink() {
+        return _link;
+    }
+
+    public boolean isSeen() {
+        return _seen;
     }
 
 }

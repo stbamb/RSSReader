@@ -6,10 +6,11 @@
         android:icon="@drawable/action_refresh"
         android:showAsAction="ifRoom"
         android:title="Refresh"/>
+
     <item
-        android:id="@+id/about_option"
-        android:icon="@drawable/action_about"
+        android:id="@+id/add_option"
+        android:icon="@drawable/action_new"
         android:showAsAction="ifRoom"
-        android:title="About Me"/>
+        android:title="Add"/>
 
 </menu>

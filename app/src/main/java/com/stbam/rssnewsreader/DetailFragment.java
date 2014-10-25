@@ -3,6 +3,7 @@ package com.stbam.rssnewsreader;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.stbam.rssnewsreader.parser.RSSFeed;
@@ -45,12 +47,19 @@ public class DetailFragment extends Fragment {
         ws.setLoadWithOverviewMode(true);
         ws.setUseWideViewPort(true);
         ws.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-        ws.setBuiltInZoomControls(true);
+        ws.setBuiltInZoomControls(false);
+        ws.setSupportZoom(false);
         ws.setUserAgentString("Mozilla/5.0 (Linux; U; Android 2.0; en-us; Droid Build/ESD20) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17");
+        desc.setWebViewClient(new WebViewClient());
+
         // Set the views
         title.setText(fFeed.getItem(fPos).getTitle());
-        desc.loadDataWithBaseURL("http://www.androidcentral.com/", fFeed.getItem(fPos)
-                .getDescription(), "text/html", "UTF-8", null);
+
+        String data = "<html><body><center>" + fFeed.getItem(fPos).getDescription() + "</center></body></html>";
+        desc.loadData(data, "text/html; charset=UTF-8", null);
+
+        // para ver como se forman los tags HTML que carga el WebView
+        //Log.d("HTML", data);
         return view;
     }
 }

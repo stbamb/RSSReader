@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/thumb"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_launcher" />
 
@@ -43,6 +43,7 @@
             android:text="@string/date"
             android:textColor="#7F7F7F"
             android:textSize="10sp" />
+
     </RelativeLayout>
 
     <ImageView
