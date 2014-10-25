@@ -3,6 +3,6 @@ RSSReader
 
 Proyecto II || TEC
 
-git add -all
-git commit -m "Changes"
-git push origin master
+1. git add -all
+2. git commit -m "Changes"
+3. git push origin master
