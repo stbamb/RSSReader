@@ -253,12 +253,13 @@ public class SplashActivity extends Activity {
             fIn = openFileInput(fName);
             isr = new ObjectInputStream(fIn);
 
+            System.out.println("Listasourcessize: " + lista_sources.size());
             for (int i = 0; i < lista_sources.size(); i++)
             {
                 texto = isr.readLine();
                 sour = crearListaDinamica(texto);
                 s.add(sour);
-                //Log.d("Linea leida:", "" + texto);
+                Log.d("Linea leida:", "" + texto);
             }
         }
 
@@ -371,7 +372,7 @@ public class SplashActivity extends Activity {
                         s.setIdioma(c.getString(TAG_IDIOMA));
 
                         lista_sources.add(s);
-                        //System.out.println("Paso por aqui");
+                        System.out.println("Paso por aqui");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
