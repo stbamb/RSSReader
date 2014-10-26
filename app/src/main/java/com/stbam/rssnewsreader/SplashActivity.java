@@ -62,6 +62,12 @@ public class SplashActivity extends Activity {
         while (sinterminar)
             abc++;
 
+        // arreglar lo que esta despues de este comentario
+        // se debe hacer una funcion que "recuerde"
+        // cuales son los feed sources viejos
+        // para compararlos con los nuevos
+        // y si cambiaron, entonces volver a crear los archivos necesarios
+
         if (logFile.exists())
         {
             escribirRegistro();
