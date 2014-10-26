@@ -68,11 +68,11 @@ public class SplashActivity extends Activity {
         // para compararlos con los nuevos
         // y si cambiaron, entonces volver a crear los archivos necesarios
 
-        if (logFile.exists())
-        {
+        //if (logFile.exists())
+        //{
             escribirRegistro();
-            Log.d("Esta creando el arhivo nuevo", "");
-        }
+        //    Log.d("Esta creando el arhivo nuevo", "");
+        //}
         lista_sources2 = leerRegistros(logName);
 
         if (lista_sources2 != null)
