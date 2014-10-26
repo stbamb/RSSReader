@@ -40,7 +40,7 @@ public class DOMParser {
             //e1.printStackTrace();
         }
 
-        if (xml == theverge || xml == theverge_burner || xml == polygon || xml == polygon_burner)
+        if (xml.equals(theverge) || xml.equals(theverge_burner) || xml.equals(polygon) || xml.equals(polygon_burner))
             leerPolygonYTheVerge(url, nombre);
         else
             leerOtrosFeed(url, nombre);
@@ -85,6 +85,8 @@ public class DOMParser {
                     Node thisNode = nchild.item(j);
                     String theString = null;
                     String nodeName = thisNode.getNodeName();
+
+                    _item.set_source_page(nombre);
 
                     theString = nchild.item(j).getFirstChild().getNodeValue();
 
