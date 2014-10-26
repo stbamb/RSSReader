@@ -6,9 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,6 +18,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import com.stbam.rssnewsreader.parser.*;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SplashActivity extends Activity {
 
@@ -36,11 +44,23 @@ public class SplashActivity extends Activity {
         nuevo.setIdioma();
     }*/
 
+    public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json";
+
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources2 = new ArrayList<FeedSource>();
 	RSSFeed feed;
 	public static String fileName;
     public static String logName;
+
+    JSONArray fuentessr = null;
+
+
+    private static final String TAG_SOURCES = "source";
+    private static final String TAG_URL = "url";
+    private static final String TAG_URL_PAGINA = "urlpagina";
+    private static final String TAG_NOMBRE = "nombre";
+    private static final String TAG_CATEGORIA = "categoria";
+    private static final String TAG_IDIOMA = "idioma";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +92,8 @@ public class SplashActivity extends Activity {
 
 		File feedFile = getBaseContext().getFileStreamPath(fileName);
         File logFile = getBaseContext().getFileStreamPath(logName);
+
+        new getAllSources().execute();
 
         if (!logFile.exists())
         {
@@ -341,5 +363,61 @@ public class SplashActivity extends Activity {
 		return _feed;
 
 	}
+
+    private class getAllSources extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            // Creating service handler class instance
+            JSONParser sh = new JSONParser();
+
+            // Making a request to url and getting response
+            String jsonStr = sh.makeServiceCall(url, JSONParser.GET);
+
+            Log.d("Response: ", "> " + jsonStr);
+
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+
+                    // Getting JSON Array node
+                    fuentessr = jsonObj.getJSONArray(TAG_SOURCES);
+
+                    // looping through All Contacts
+                    for (int i = 0; i < fuentessr.length(); i++) {
+                        JSONObject c = fuentessr.getJSONObject(i);
+
+                        System.out.println(c.getString("nombre"));
+
+
+
+                        // tmp hashmap for single contact
+                        //HashMap<String, String> contact = new HashMap<String, String>();
+
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e("ServiceHandler", "Couldn't get any data from the url");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            // Dismiss the progress dialog
+
+        }
+
+    }
 
 }
