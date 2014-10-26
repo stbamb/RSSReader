@@ -62,7 +62,7 @@ public class SplashActivity extends Activity {
         while (sinterminar)
             abc++;
 
-        if (!logFile.exists())
+        if (logFile.exists())
         {
             escribirRegistro();
             Log.d("Esta creando el arhivo nuevo", "");
@@ -244,7 +244,6 @@ public class SplashActivity extends Activity {
         ArrayList<FeedSource> s = new ArrayList<FeedSource>();
         FeedSource sour = new FeedSource();
         String texto = null;
-        char t;
         File feedFile = getBaseContext().getFileStreamPath(logName);
         if (!feedFile.exists())
             return null;
@@ -253,13 +252,13 @@ public class SplashActivity extends Activity {
             fIn = openFileInput(fName);
             isr = new ObjectInputStream(fIn);
 
-            System.out.println("Listasourcessize: " + lista_sources.size());
+            //System.out.println("Listasourcessize: " + lista_sources.size());
             for (int i = 0; i < lista_sources.size(); i++)
             {
                 texto = isr.readLine();
                 sour = crearListaDinamica(texto);
                 s.add(sour);
-                Log.d("Linea leida:", "" + texto);
+                //Log.d("Linea leida:", "" + texto);
             }
         }
 
@@ -372,7 +371,7 @@ public class SplashActivity extends Activity {
                         s.setIdioma(c.getString(TAG_IDIOMA));
 
                         lista_sources.add(s);
-                        System.out.println("Paso por aqui");
+                        //System.out.println("Paso por aqui");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
