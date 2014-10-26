@@ -1,4 +1,5 @@
 {"source":[
     {"url":"http://www.theverge.com/rss/frontpage", "urlpagina":"http://www.theverge.com", "nombre":"The Verge", "categoria":"tech", "idioma":"english"}, 
-	{"url":"http://www.polygon.com/rss/index.xml", "urlpagina":"http://www.polygon.com", "nombre":"Polygon", "categoria":"gaming", "idioma":"english"}, 
+	{"url":"http://www.polygon.com/rss/index.xml", "urlpagina":"http://www.polygon.com", "nombre":"Polygon", "categoria":"gaming", "idioma":"english"},
+	{"url":"http://www.theverge.com/rss/frontpage", "urlpagina":"http://www.theverge.com", "nombre":"The Verge", "categoria":"tech", "idioma":"english"}
 ]}

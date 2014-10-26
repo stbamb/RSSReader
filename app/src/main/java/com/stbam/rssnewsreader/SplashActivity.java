@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,70 +17,31 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import com.stbam.rssnewsreader.parser.*;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SplashActivity extends Activity {
 
-    // llamar a la funcion que recolecta los JSON y los convierte en instancias
-    // de la clase FeedSource
-
-    /*int largo = 0;
-
-    for (int i = 0; i < largo; i++)
-    {
-        FeedSource nuevo = new FeedSource();
-        nuevo.setURL();
-        nuevo.setNombre();
-        nuevo.setCategoria();
-        nuevo.setIdioma();
-    }*/
-
     public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json";
-
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources2 = new ArrayList<FeedSource>();
 	RSSFeed feed;
 	public static String fileName;
     public static String logName;
-
     JSONArray fuentessr = null;
-
-
     private static final String TAG_SOURCES = "source";
     private static final String TAG_URL = "url";
     private static final String TAG_URL_PAGINA = "urlpagina";
     private static final String TAG_NOMBRE = "nombre";
     private static final String TAG_CATEGORIA = "categoria";
     private static final String TAG_IDIOMA = "idioma";
+    public static boolean sinterminar = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
         FeedSource fuente = new FeedSource();
-
-        fuente.setURL("http://www.theverge.com/rss/frontpage");
-        fuente.setNombre("The Verge");
-        fuente.setCategoria("Tecnologia");
-        fuente.setIdioma("English");
-
-
-        FeedSource fuente2 = new FeedSource();
-
-        fuente2.setURL("http://www.polygon.com/rss/index.xml");
-        fuente2.setNombre("Polygon");
-        fuente2.setCategoria("Gaming");
-        fuente2.setIdioma("English");
-
-        lista_sources.add(fuente);
-        lista_sources.add(fuente2);
 
 		super.onCreate(savedInstanceState);
 
@@ -93,7 +53,14 @@ public class SplashActivity extends Activity {
 		File feedFile = getBaseContext().getFileStreamPath(fileName);
         File logFile = getBaseContext().getFileStreamPath(logName);
 
-        new getAllSources().execute();
+        // llamada a la funcion que recolecta los JSON y los convierte en instancias
+        // de la clase FeedSource y los mete en lista_sources
+
+        getAllSources a = new getAllSources();
+        a.execute();
+        int abc = 0;
+        while (sinterminar)
+            abc++;
 
         if (!logFile.exists())
         {
@@ -379,7 +346,7 @@ public class SplashActivity extends Activity {
             // Making a request to url and getting response
             String jsonStr = sh.makeServiceCall(url, JSONParser.GET);
 
-            Log.d("Response: ", "> " + jsonStr);
+            //.d("Response: ", "> " + jsonStr);
 
             if (jsonStr != null) {
                 try {
@@ -392,28 +359,34 @@ public class SplashActivity extends Activity {
                     for (int i = 0; i < fuentessr.length(); i++) {
                         JSONObject c = fuentessr.getJSONObject(i);
 
-                        System.out.println(c.getString("nombre"));
+                        //System.out.println(c.getString("nombre"));
 
+                        FeedSource s = new FeedSource();
 
+                        s.setURL(c.getString(TAG_URL));
+                        s.setURLPagina(c.getString(TAG_URL_PAGINA));
 
-                        // tmp hashmap for single contact
-                        //HashMap<String, String> contact = new HashMap<String, String>();
+                        s.setNombre(c.getString(TAG_NOMBRE));
+                        s.setCategoria(c.getString(TAG_CATEGORIA));
+                        s.setIdioma(c.getString(TAG_IDIOMA));
 
-
+                        lista_sources.add(s);
+                        //System.out.println("Paso por aqui");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             } else {
-                Log.e("ServiceHandler", "Couldn't get any data from the url");
+               // Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
-
+            sinterminar = false;
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            sinterminar = false;
             // Dismiss the progress dialog
 
         }
