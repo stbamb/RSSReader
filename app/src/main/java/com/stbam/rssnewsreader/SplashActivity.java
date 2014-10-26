@@ -62,7 +62,7 @@ public class SplashActivity extends Activity {
         while (sinterminar)
             abc++;
 
-        if (!logFile.exists())
+        if (logFile.exists())
         {
             escribirRegistro();
             Log.d("Esta creando el arhivo nuevo", "");
