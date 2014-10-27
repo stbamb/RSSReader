@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 public class SplashActivity extends Activity {
 
     public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json";
+    public static String url2 = "http://72.2.118.65:3000/feeds";
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources2 = new ArrayList<FeedSource>();
 	RSSFeed feed;
@@ -50,7 +52,8 @@ public class SplashActivity extends Activity {
 		fileName = "TDRSSFeed.td";
         logName = "RSSReaderLog.stb";
 
-		File feedFile = getBaseContext().getFileStreamPath(fileName);
+
+        File feedFile = getBaseContext().getFileStreamPath(fileName);
         File logFile = getBaseContext().getFileStreamPath(logName);
 
         // llamada a la funcion que recolecta los JSON y los convierte en instancias
@@ -218,9 +221,9 @@ public class SplashActivity extends Activity {
                 osw.write(s.getNombre().getBytes());
                 osw.write("; ".getBytes());
                 if (s.isAceptado())
-                    osw.write("true".getBytes());
+                    osw.write("trueverdadero".getBytes());
                 else
-                    osw.write("false".getBytes());
+                    osw.write("falsefalso".getBytes());
                 osw.write(";".getBytes());
                 osw.write("\n".getBytes());
             }
@@ -294,7 +297,7 @@ public class SplashActivity extends Activity {
 
        // System.out.println("Verdadero/Falso:" + partes[2]);
 
-        if (linea.contains("true"))
+        if (linea.contains("trueverdadero"))
             sour.setAceptado(true);
 
         else
@@ -350,7 +353,7 @@ public class SplashActivity extends Activity {
             JSONParser sh = new JSONParser();
 
             // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(url, JSONParser.GET);
+            String jsonStr = sh.makeServiceCall(url2, JSONParser.GET);
 
             //.d("Response: ", "> " + jsonStr);
 
