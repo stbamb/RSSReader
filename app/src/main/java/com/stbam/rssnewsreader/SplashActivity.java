@@ -100,6 +100,9 @@ public class SplashActivity extends Activity {
         else
             System.out.println("No se creo ningun archivo de los feed sources actuales.");
 
+        escribirRegistro(sourceName);
+        escribirRegistro(logName);
+
         if (!logFile.exists() || !son_iguales)
         {
             escribirRegistro(logName);
@@ -315,7 +318,7 @@ public class SplashActivity extends Activity {
     // si existe entonces lee el registro
     // para cargar los sources aceptados
 
-    public  ArrayList<FeedSource> leerRegistros(String fName) {
+    public ArrayList<FeedSource> leerRegistros(String fName) {
 
         FileInputStream fIn = null;
         ObjectInputStream isr = null;
