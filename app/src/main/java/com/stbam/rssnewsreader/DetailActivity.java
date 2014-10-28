@@ -55,7 +55,14 @@ public class DetailActivity extends FragmentActivity {
 		return true;
 	}
 
-	@Override
+    /*@Override
+    public void onBackPressed() {
+        android.app.FragmentManager fm = getFragmentManager();
+        fm.popBackStack();
+
+    }*/
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 

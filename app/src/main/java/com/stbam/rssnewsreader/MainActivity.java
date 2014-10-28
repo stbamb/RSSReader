@@ -119,13 +119,18 @@ public class MainActivity extends Activity {
     }
     public void refreshList(final MenuItem item) {
 
+        feedLink = new AddActivity().feedLink;
+
         // trigger feed refresh:
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 DOMParser tmpDOMParser = new DOMParser();
                 feed = null;
+
                 int itemes_feed = feedLink.size();
+
+                //System.out.println("MainActivity: " + itemes_feed);
 
                 boolean todoNulo = true;
 
@@ -142,10 +147,10 @@ public class MainActivity extends Activity {
                 if (todoNulo)
                     feed = null;
 
-                for (int i = 0; i < feedLink.size(); i++)
+                /*for (int i = 0; i < feedLink.size(); i++)
                 {
                     Log.d("Nombre/Aceptado", "" + feedLink.get(i).getNombre() +  "/" + feedLink.get(i).isAceptado());
-                }
+                }*/
 
                 MainActivity.this.runOnUiThread(new Runnable() {
 

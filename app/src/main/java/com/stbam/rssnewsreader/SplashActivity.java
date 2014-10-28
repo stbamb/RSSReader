@@ -28,9 +28,11 @@ public class SplashActivity extends Activity {
     public static String url2 = "http://72.2.118.65:3000/feeds";
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources2 = new ArrayList<FeedSource>();
+    public static ArrayList<FeedSource> lista_sources_viejos = new ArrayList<FeedSource>();
 	RSSFeed feed;
 	public static String fileName;
     public static String logName;
+    public static String sourceName;
     JSONArray fuentessr = null;
     private static final String TAG_SOURCES = "source";
     private static final String TAG_URL = "url";
@@ -51,10 +53,12 @@ public class SplashActivity extends Activity {
 
 		fileName = "TDRSSFeed.td";
         logName = "RSSReaderLog.stb";
+        sourceName = "RSSReaderFeed.stb";
 
 
         File feedFile = getBaseContext().getFileStreamPath(fileName);
         File logFile = getBaseContext().getFileStreamPath(logName);
+        File sourceFile = getBaseContext().getFileStreamPath(sourceName);
 
         // llamada a la funcion que recolecta los JSON y los convierte en instancias
         // de la clase FeedSource y los mete en lista_sources
@@ -71,14 +75,18 @@ public class SplashActivity extends Activity {
         // para compararlos con los nuevos
         // y si cambiaron, entonces volver a crear los archivos necesarios
 
-        //if (logFile.exists())
-        //{
+        if (!logFile.exists())// || !sourceFile.exists())
+        {
             escribirRegistro();
-        //    Log.d("Esta creando el arhivo nuevo", "");
-        //}
+            Log.d("Esta creando el arhivo nuevo", "");
+        }
+        else
+            System.out.println("No se creo ningun archivo");
+
+
         lista_sources2 = leerRegistros(logName);
 
-        if (lista_sources2 != null)
+        /*if (lista_sources2 != null)
         {
             for (int i = 0; i < lista_sources2.size(); i++)
             {
@@ -86,7 +94,7 @@ public class SplashActivity extends Activity {
                 Log.d("Esta funcionando:", "" + lista_sources2.get(i).getNombre());
                 Log.d("Esta funcionando:", "" + lista_sources2.get(i).isAceptado());
             }
-        }
+        }*/
 
         //Log.d("Path de archivo", feedFile.getAbsolutePath());
 
@@ -353,7 +361,7 @@ public class SplashActivity extends Activity {
             JSONParser sh = new JSONParser();
 
             // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(url2, JSONParser.GET);
+            String jsonStr = sh.makeServiceCall(url, JSONParser.GET);
 
             //.d("Response: ", "> " + jsonStr);
 
