@@ -440,7 +440,7 @@ public class SplashActivity extends Activity {
                     for (int i = 0; i < fuentessr.length(); i++) {
                         JSONObject c = fuentessr.getJSONObject(i);
 
-                        System.out.println(c.getString("nombre"));
+                        //System.out.println(c.getString("nombre"));
 
                         FeedSource s = new FeedSource();
 
