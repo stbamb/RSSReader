@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import com.stbam.rssnewsreader.parser.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +53,6 @@ public class SplashActivity extends Activity {
         logName = "RSSReaderLog.stb";
         sourceName = "RSSReaderFeed.stb";
 
-
         File feedFile = getBaseContext().getFileStreamPath(fileName);
         File logFile = getBaseContext().getFileStreamPath(logName);
         File sourceFile = getBaseContext().getFileStreamPath(sourceName);
@@ -88,12 +86,10 @@ public class SplashActivity extends Activity {
         }*/
 
         if (lista_sources_viejos == null)
-        {
             son_iguales = false;
-            System.out.println("Desde SplashActivity, lista_sources_viejos == null");
-        }
         else
             son_iguales = cambiaronFeedSources();
+
         System.out.println("Los feed sources cambiaron: " + !son_iguales);
 
         if (!sourceFile.exists() || !son_iguales)
@@ -114,13 +110,13 @@ public class SplashActivity extends Activity {
 
         lista_sources2 = leerRegistros(logName);
 
-        /*if (lista_sources2 != null)
+        /*if (lista_sources != null)
         {
             for (int i = 0; i < lista_sources2.size(); i++)
             {
-                Log.d("Esta funcionando:", "" + lista_sources2.get(i).getURL());
-                Log.d("Esta funcionando:", "" + lista_sources2.get(i).getNombre());
-                Log.d("Esta funcionando:", "" + lista_sources2.get(i).isAceptado());
+                Log.d("Esta funcionando:", "" + lista_sources.get(i).getURL());
+                Log.d("Esta funcionando:", "" + lista_sources.get(i).getNombre());
+                Log.d("Esta funcionando:", "" + lista_sources.get(i).isAceptado());
             }
         }*/
 
@@ -285,8 +281,14 @@ public class SplashActivity extends Activity {
                 osw.write(";".getBytes());
                 osw.write(s.getURLPagina().getBytes());
                 osw.write(";".getBytes());
-                if (s.isAceptado())
-                    osw.write("trueverdadero".getBytes());
+                if (i < lista_sources_viejos.size())
+                {
+                    FeedSource ss = lista_sources_viejos.get(i);
+                    if (ss.isAceptado())
+                        osw.write("trueverdadero".getBytes());
+                    else
+                        osw.write("falsefalso".getBytes());
+                }
                 else
                     osw.write("falsefalso".getBytes());
                 osw.write(";".getBytes());
