@@ -281,8 +281,9 @@ public class SplashActivity extends Activity {
                 osw.write(";".getBytes());
                 osw.write(s.getURLPagina().getBytes());
                 osw.write(";".getBytes());
-                if (i < lista_sources_viejos.size())
+                if (i <= lista_sources_viejos.size())
                 {
+                    System.out.println("Especial");
                     FeedSource ss = lista_sources_viejos.get(i);
                     if (ss.isAceptado())
                         osw.write("trueverdadero".getBytes());
@@ -439,7 +440,7 @@ public class SplashActivity extends Activity {
                     for (int i = 0; i < fuentessr.length(); i++) {
                         JSONObject c = fuentessr.getJSONObject(i);
 
-                        //System.out.println(c.getString("nombre"));
+                        System.out.println(c.getString("nombre"));
 
                         FeedSource s = new FeedSource();
 
