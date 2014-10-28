@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,8 +23,8 @@ import org.json.JSONObject;
 
 public class SplashActivity extends Activity {
 
-    public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json";
-    public static String url2 = "http://72.2.118.65:3000/feeds";
+    public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json"; // para pruebas
+    public static String url2 = "http://72.2.118.65:3000/feeds"; // para progra
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources2 = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources_viejos = new ArrayList<FeedSource>();
@@ -75,14 +74,43 @@ public class SplashActivity extends Activity {
         // para compararlos con los nuevos
         // y si cambiaron, entonces volver a crear los archivos necesarios
 
-        if (!logFile.exists())// || !sourceFile.exists())
+        boolean son_iguales;
+        lista_sources_viejos = leerRegistros(sourceName);
+
+        /*for (int i = 0; i < lista_sources_viejos.size(); i++)
         {
-            escribirRegistro();
-            Log.d("Esta creando el arhivo nuevo", "");
+            System.out.println("lista_sources_viejos:" + lista_sources_viejos.get(i).getNombre());
+            System.out.println("lista_sources:" + lista_sources.get(i).getNombre());
+            /*Log.d("lista_sources_viejos:", "" + lista_sources_viejos.get(i).getNombre());
+            Log.d("lista_sources:", "" + lista_sources.get(i).getNombre());
+            Log.d("lista_sources_viejos:", "" + lista_sources_viejos.get(i).isAceptado());
+            Log.d("lista_sources:", "" + lista_sources.get(i).isAceptado());
+        }*/
+
+        if (lista_sources_viejos == null)
+        {
+            son_iguales = false;
+            System.out.println("Desde SplashActivity, lista_sources_viejos == null");
         }
         else
-            System.out.println("No se creo ningun archivo");
+            son_iguales = cambiaronFeedSources();
+        System.out.println("Los feed sources cambiaron: " + !son_iguales);
 
+        if (!sourceFile.exists() || !son_iguales)
+        {
+            escribirRegistro(sourceName);
+            System.out.println("Desde el SplashActivity se creo el archivo de los feed sources actuales.");
+        }
+        else
+            System.out.println("No se creo ningun archivo de los feed sources actuales.");
+
+        if (!logFile.exists() || !son_iguales)
+        {
+            escribirRegistro(logName);
+            System.out.println("Desde el SplashActivity se creo el archivo que lleva el registro de cuales feed sources han sido aceptados y cuales no.");
+        }
+        else
+            System.out.println("No se creo ningun archivo que lleva el registro de cuales feed sources han sido aceptados y cuales no.");
 
         lista_sources2 = leerRegistros(logName);
 
@@ -95,8 +123,6 @@ public class SplashActivity extends Activity {
                 Log.d("Esta funcionando:", "" + lista_sources2.get(i).isAceptado());
             }
         }*/
-
-        //Log.d("Path de archivo", feedFile.getAbsolutePath());
 
 		ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (conMgr.getActiveNetworkInfo() == null) {
@@ -136,6 +162,31 @@ public class SplashActivity extends Activity {
 		}
 
 	}
+
+    public boolean cambiaronFeedSources()
+    {
+        boolean bandera = false;
+
+        if (lista_sources.size() == lista_sources_viejos.size() && lista_sources.size() != 0)
+            for (int i = 0; i < lista_sources.size(); i++)
+            {
+                /*System.out.println(lista_sources.get(i).getNombre().equals(lista_sources_viejos.get(i).getNombre()));
+                System.out.println("Nombre lista_sources[" + i + "]: " + lista_sources.get(i).getNombre());
+                System.out.println("Nombre lista_sources_viejos[" + i + "]: " + lista_sources_viejos.get(i).getNombre());
+                System.out.println(lista_sources.get(i).getURL().equals(lista_sources_viejos.get(i).getURL()));
+                System.out.println(lista_sources.get(i).getCategoria().equals(lista_sources_viejos.get(i).getCategoria()));
+                System.out.println(lista_sources.get(i).getIdioma().equals(lista_sources_viejos.get(i).getIdioma()));
+                //System.out.println(lista_sources.get(i).getImg().equals(lista_sources_viejos.get(i).getImg()));
+                System.out.println(lista_sources.get(i).getURLPagina().equals(lista_sources_viejos.get(i).getURLPagina()));*/
+
+                if (lista_sources.get(i).getNombre().equals(lista_sources_viejos.get(i).getNombre()) && lista_sources.get(i).getURL().equals(lista_sources_viejos.get(i).getURL())
+                        && lista_sources.get(i).getCategoria().equals(lista_sources_viejos.get(i).getCategoria()) && lista_sources.get(i).getIdioma().equals(lista_sources_viejos.get(i).getIdioma())
+                        && lista_sources.get(i).getURLPagina().equals(lista_sources_viejos.get(i).getURLPagina()))
+                    bandera = true;
+            }
+
+        return bandera;
+    }
 
 	private void startListActivity(RSSFeed feed) {
 
@@ -212,22 +263,28 @@ public class SplashActivity extends Activity {
 		}
 	}
 
-    public void escribirRegistro() {
+    public void escribirRegistro(String file_name) {
 
         FileOutputStream fOut = null;
         ObjectOutputStream osw = null;
 
         try {
-            fOut = openFileOutput(logName, MODE_PRIVATE);
+            fOut = openFileOutput(file_name, MODE_PRIVATE);
             osw = new ObjectOutputStream(fOut);
 
             for (int i = 0; i < lista_sources.size(); i++)
             {
                 FeedSource s = lista_sources.get(i);
                 osw.write(s.getURL().getBytes());
-                osw.write("; ".getBytes());
+                osw.write(";".getBytes());
                 osw.write(s.getNombre().getBytes());
-                osw.write("; ".getBytes());
+                osw.write(";".getBytes());
+                osw.write(s.getCategoria().getBytes());
+                osw.write(";".getBytes());
+                osw.write(s.getIdioma().getBytes());
+                osw.write(";".getBytes());
+                osw.write(s.getURLPagina().getBytes());
+                osw.write(";".getBytes());
                 if (s.isAceptado())
                     osw.write("trueverdadero".getBytes());
                 else
@@ -254,6 +311,7 @@ public class SplashActivity extends Activity {
 
     // si existe entonces lee el registro
     // para cargar los sources aceptados
+
     public  ArrayList<FeedSource> leerRegistros(String fName) {
 
         FileInputStream fIn = null;
@@ -261,7 +319,7 @@ public class SplashActivity extends Activity {
         ArrayList<FeedSource> s = new ArrayList<FeedSource>();
         FeedSource sour = new FeedSource();
         String texto = null;
-        File feedFile = getBaseContext().getFileStreamPath(logName);
+        File feedFile = getBaseContext().getFileStreamPath(fName);
         if (!feedFile.exists())
             return null;
 
@@ -275,7 +333,7 @@ public class SplashActivity extends Activity {
                 texto = isr.readLine();
                 sour = crearListaDinamica(texto);
                 s.add(sour);
-                //Log.d("Linea leida:", "" + texto);
+                //System.out.println("Desde SplashActivity, la linea leida es: " + texto);
             }
         }
 
@@ -302,6 +360,9 @@ public class SplashActivity extends Activity {
         String[] partes = linea.split(";");
         sour.setURL(partes[0]);
         sour.setNombre(partes[1]);
+        sour.setCategoria(partes[2]);
+        sour.setIdioma(partes[3]);
+        sour.setURLPagina(partes[4]);
 
        // System.out.println("Verdadero/Falso:" + partes[2]);
 

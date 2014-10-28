@@ -189,9 +189,15 @@ public class AddActivity extends Activity {
             {
                 FeedSource s = feedLink.get(i);
                 osw.write(s.getURL().getBytes());
-                osw.write("; ".getBytes());
+                osw.write(";".getBytes());
                 osw.write(s.getNombre().getBytes());
-                osw.write("; ".getBytes());
+                osw.write(";".getBytes());
+                osw.write(s.getCategoria().getBytes());
+                osw.write(";".getBytes());
+                osw.write(s.getIdioma().getBytes());
+                osw.write(";".getBytes());
+                osw.write(s.getURLPagina().getBytes());
+                osw.write(";".getBytes());
                 if (s.isAceptado())
                     osw.write("trueverdadero".getBytes());
                 else
@@ -266,6 +272,9 @@ public class AddActivity extends Activity {
         String[] partes = linea.split(";");
         sour.setURL(partes[0]);
         sour.setNombre(partes[1]);
+        sour.setCategoria(partes[2]);
+        sour.setIdioma(partes[3]);
+        sour.setURLPagina(partes[4]);
 
         // System.out.println("Verdadero/Falso:" + partes[2]);
 

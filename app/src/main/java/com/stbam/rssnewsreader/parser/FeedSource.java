@@ -7,7 +7,6 @@ public class FeedSource {
 
     private String URL;
     private String URLPagina; // solo sirve para almacenar el URL de la pagina e.g. polygon.com
-    private String img;
     private String nombre;
     private String categoria;
     private String idioma;
@@ -19,14 +18,6 @@ public class FeedSource {
 
     public void setURLPagina(String URLPagina) {
         this.URLPagina = URLPagina;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
     }
 
     public boolean isAceptado() {
