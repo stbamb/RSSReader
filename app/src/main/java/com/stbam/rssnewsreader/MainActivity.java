@@ -121,22 +121,22 @@ public class MainActivity extends Activity {
 
         feedLink = new AddActivity().feedLink;
 
+        if (feedLink == null)
+            feedLink = new SplashActivity().lista_sources2;
+
         // trigger feed refresh:
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 DOMParser tmpDOMParser = new DOMParser();
                 feed = null;
-
                 int itemes_feed = feedLink.size();
-
-                //System.out.println("MainActivity: " + itemes_feed);
-
                 boolean todoNulo = true;
 
                 for (int i = 0; i < itemes_feed; i++)
                 {
                     FeedSource s = feedLink.get(i);
+                    //System.out.println("Nombre: " + s.getNombre() + " URL: " + s.getURL() + " Aceptado: " + s.isAceptado());
                     if (s.isAceptado())
                     {
                         feed = tmpDOMParser.parseXml(s.getURL(), s.getNombre());
@@ -147,11 +147,6 @@ public class MainActivity extends Activity {
                 if (todoNulo)
                     feed = null;
 
-                /*for (int i = 0; i < feedLink.size(); i++)
-                {
-                    Log.d("Nombre/Aceptado", "" + feedLink.get(i).getNombre() +  "/" + feedLink.get(i).isAceptado());
-                }*/
-
                 MainActivity.this.runOnUiThread(new Runnable() {
 
                     @Override
@@ -160,20 +155,17 @@ public class MainActivity extends Activity {
 
                             if (empiezaVacio)
                                 lv.setAdapter(adapter);
-                            else
+
+                            else {
+                                lv.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
-
+                            }
                             item.setEnabled(false);
-                            new CountDownTimer(3000, 1000) {
-
-                                public void onTick(long millisUntilFinished) {
-
-                                }
+                            new CountDownTimer(3000, 1000) {public void onTick(long millisUntilFinished) {}
 
                             public void onFinish() {
                                 item.setEnabled(true);
-                            }
-                            }.start();
+                            }        }.start();
                         }
                         else if (feed == null)
                             lv.setAdapter(null);
@@ -239,12 +231,7 @@ public class MainActivity extends Activity {
             // Set the views in the layout
             imageLoader.DisplayImage(feed.getItem(pos).getImage(), iv);
             tvTitle.setText(feed.getItem(pos).getTitle());
-            if (feed.getItem(pos).isSeen()) {
-                tvDate.setText(feed.getItem(pos).get_source_page() + "\t" + "Seen");
-            }
-            else
-                tvDate.setText(feed.getItem(pos).get_source_page() + "\t" + "Unseen");
-
+            tvDate.setText(feed.getItem(pos).get_source_page());
             return listItem;
         }
 

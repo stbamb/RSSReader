@@ -79,14 +79,16 @@ public class AddActivity extends Activity {
                 {
                     checked_item.setVisibility(View.INVISIBLE);
                     feedLink.get(pos).setAceptado(false);
-                    escribirRegistro();
+                    escribirRegistro("RSSReaderLog.stb");
+                    escribirRegistro("RSSReaderFeed.stb");
                     leerRegistros("RSSReaderLog.stb"); // linea no necesaria, solo se usa para ver registros escritos al archivo 'RSSReaderLog.stb'
                 }
                 else
                 {
                     checked_item.setVisibility(View.VISIBLE);
                     feedLink.get(pos).setAceptado(true);
-                    escribirRegistro();
+                    escribirRegistro("RSSReaderLog.stb");
+                    escribirRegistro("RSSReaderFeed.stb");
                     leerRegistros("RSSReaderLog.stb"); // linea no necesaria, solo se usa para ver registros escritos al archivo 'RSSReaderLog.stb'
                 }
             }
@@ -176,17 +178,16 @@ public class AddActivity extends Activity {
 
     }
 
-    public void escribirRegistro() {
+    public void escribirRegistro(String file_name) {
 
         FileOutputStream fOut = null;
-        ObjectOutputStream osw = null;
+        ObjectOutputStream osw;
 
         try {
-            fOut = openFileOutput("RSSReaderLog.stb", MODE_PRIVATE);
+            fOut = openFileOutput(file_name, MODE_PRIVATE);
             osw = new ObjectOutputStream(fOut);
 
-            for (int i = 0; i < feedLink.size(); i++)
-            {
+            for (int i = 0; i < feedLink.size(); i++) {
                 FeedSource s = feedLink.get(i);
                 osw.write(s.getURL().getBytes());
                 osw.write(";".getBytes());
@@ -202,6 +203,7 @@ public class AddActivity extends Activity {
                     osw.write("trueverdadero".getBytes());
                 else
                     osw.write("falsefalso".getBytes());
+
                 osw.write(";".getBytes());
                 osw.write("\n".getBytes());
             }
@@ -224,14 +226,15 @@ public class AddActivity extends Activity {
 
     // si existe entonces lee el registro
     // para cargar los sources aceptados
-    public  ArrayList<FeedSource> leerRegistros(String fName) {
+
+    public ArrayList<FeedSource> leerRegistros(String fName) {
 
         FileInputStream fIn = null;
         ObjectInputStream isr = null;
         ArrayList<FeedSource> s = new ArrayList<FeedSource>();
-        FeedSource sour = new FeedSource();
-        String texto = null;
-        File feedFile = getBaseContext().getFileStreamPath("RSSReaderLog.stb");
+        FeedSource sour;
+        String texto = "";
+        File feedFile = getBaseContext().getFileStreamPath(fName);
         if (!feedFile.exists())
             return null;
 
@@ -245,7 +248,7 @@ public class AddActivity extends Activity {
                 texto = isr.readLine();
                 sour = crearListaDinamica(texto);
                 s.add(sour);
-                System.out.println("Linea leida desde AddActivity: " + texto);
+                System.out.println("Desde AddActivity, la linea leida es: " + texto);
             }
         }
 
