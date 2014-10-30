@@ -2,43 +2,31 @@ package com.stbam.rssnewsreader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-
-import com.stbam.rssnewsreader.image.ImageLoader;
 import com.stbam.rssnewsreader.parser.FeedSource;
-
-import junit.runner.Version;
-
-import java.io.File;
-import java.io.FileInputStream;
+import com.stbam.widgets.AnimatedExpandableListView;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
-
-public class AddActivity extends Activity {
-
-    ListView lv;
+public class AddActivity extends Activity
+{
+    private AnimatedExpandableListView listView;
+    private ExampleAdapter adapter;
     public static ArrayList<FeedSource> feedLink;
-    VersionAdapter adapter;
-    SplashActivity s =  new SplashActivity();
+    SplashActivity s = new SplashActivity();
+    private static ArrayList<String> lista_categorias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,32 +36,54 @@ public class AddActivity extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
-        // mi codigo
+        final List<GroupItem> items = new ArrayList<GroupItem>();
 
         feedLink = new SplashActivity().lista_sources2;
+        lista_categorias = obtenerCategorias();
+        int cant_categorias = lista_categorias.size();
 
-        lv = (ListView) findViewById(R.id.lista_paginas);
-        lv.setVerticalFadingEdgeEnabled(true);
+        llenarInfo(items, cant_categorias);
 
-        adapter = new VersionAdapter(this);
+        adapter = new ExampleAdapter(this);
+        adapter.setData(items);
 
-        lv.setAdapter(adapter);
+        listView = (AnimatedExpandableListView) findViewById(R.id.listView2);
+        listView.setVerticalFadingEdgeEnabled(true);
+        listView.setAdapter(adapter);
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // In order to show animations, we need to use a custom click handler
+        // for our ExpandableListView.
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                    long arg3) {
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                // We call collapseGroupWithAnimation(int) and
+                // expandGroupWithAnimation(int) to animate group
+                // expansion/collapse.
+                if (listView.isGroupExpanded(groupPosition)) {
+                    listView.collapseGroupWithAnimation(groupPosition);
+                } else {
+                    listView.expandGroupWithAnimation(groupPosition);
+                }
+
+                return true;
+            }
+
+        });
+
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 // encuentra la posicion del item seleccionado
                 // y le pone o le quita el check
 
-                int pos = arg2;
+                ImageView checked_item = (ImageView) v.findViewById(R.id.check);
 
-                View child = lv.getChildAt(pos);
+                ChildItem item = items.get(groupPosition).items.get(childPosition);
 
-                ImageView checked_item = (ImageView) child.findViewById(R.id.check);
+                int pos = getPosicion(item.title);
 
                 if (checked_item.getVisibility() == View.VISIBLE)
                 {
@@ -81,7 +91,6 @@ public class AddActivity extends Activity {
                     feedLink.get(pos).setAceptado(false);
                     escribirRegistro("RSSReaderLog.stb");
                     escribirRegistro("RSSReaderFeed.stb");
-                    leerRegistros("RSSReaderLog.stb"); // linea no necesaria, solo se usa para ver registros escritos al archivo 'RSSReaderLog.stb'
                 }
                 else
                 {
@@ -89,12 +98,32 @@ public class AddActivity extends Activity {
                     feedLink.get(pos).setAceptado(true);
                     escribirRegistro("RSSReaderLog.stb");
                     escribirRegistro("RSSReaderFeed.stb");
-                    leerRegistros("RSSReaderLog.stb"); // linea no necesaria, solo se usa para ver registros escritos al archivo 'RSSReaderLog.stb'
                 }
+
+                return true;
             }
         });
     }
 
+    private static class GroupItem {
+        String title;
+        List<ChildItem> items = new ArrayList<ChildItem>();
+    }
+
+    private static class ChildItem {
+        String title;
+        String hint;
+    }
+
+    private static class ChildHolder {
+        TextView title;
+        TextView hint;
+        ImageView isChecked;
+    }
+
+    private static class GroupHolder {
+        TextView title;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,62 +147,108 @@ public class AddActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    class VersionAdapter extends BaseAdapter {
+    /**
+     * Adapter for our list of {@link GroupItem}s.
+     */
+    private class ExampleAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter {
+        private LayoutInflater inflater;
 
-        private LayoutInflater layoutInflater;
+        private List<GroupItem> items;
 
-        public VersionAdapter(AddActivity activity) {
-            layoutInflater = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public ExampleAdapter(Context context) {
+            inflater = LayoutInflater.from(context);
+        }
+
+        public void setData(List<GroupItem> items) {
+            this.items = items;
         }
 
         @Override
-        public int getCount() {
-            return feedLink.size();
+        public ChildItem getChild(int groupPosition, int childPosition) {
+            return items.get(groupPosition).items.get(childPosition);
         }
 
         @Override
-        public Object getItem(int position) {
-            return feedLink.get(position);
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            View listItem = convertView;
-            int pos = position;
-            if (listItem == null) {
-               // holder = new ViewHolder();
-                listItem = layoutInflater.inflate(R.layout.feed_source, null);
-
-                //holder.imgViewLogo = (ImageView) findViewById(R.id.check);
-                //listItem.setTag(holder);
+        public View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            ChildHolder holder;
+            ChildItem item = getChild(groupPosition, childPosition);
+            if (convertView == null) {
+                holder = new ChildHolder();
+                convertView = inflater.inflate(R.layout.feed_source, parent, false);
+                holder.title = (TextView) convertView.findViewById(R.id.source_name);
+                holder.hint = (TextView) convertView.findViewById(R.id.textHint);
+                holder.isChecked = (ImageView) convertView.findViewById(R.id.check);
+                convertView.setTag(holder);
+            } else {
+                holder = (ChildHolder) convertView.getTag();
             }
-            else
-            {
-               // holder = (ViewHolder)convertView.getTag();
-            }
 
-            ImageView iv = (ImageView) listItem.findViewById(R.id.category_img);
-            TextView tvTitle = (TextView) listItem.findViewById(R.id.source_name);
-            ImageView checked_item = (ImageView) listItem.findViewById(R.id.check);
+            holder.title.setText(item.title);
+            holder.hint.setText(item.hint);
+
+            int pos = getPosicion(item.title);
 
             if (feedLink.get(pos).isAceptado()) {
-                checked_item.setVisibility(View.VISIBLE);
+                holder.isChecked.setVisibility(View.VISIBLE);
             }
-
             else if (!feedLink.get(pos).isAceptado()) {
-                checked_item.setVisibility(View.INVISIBLE);
+                holder.isChecked.setVisibility(View.INVISIBLE);
             }
-            iv.setBackgroundResource(R.drawable.ic_launcher);
-            tvTitle.setText(feedLink.get(pos).getNombre());
 
-            return listItem;
+            return convertView;
+        }
+
+        @Override
+        public int getRealChildrenCount(int groupPosition) {
+            return items.get(groupPosition).items.size();
+        }
+
+        @Override
+        public GroupItem getGroup(int groupPosition) {
+            return items.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return items.size();
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            GroupHolder holder;
+            GroupItem item = getGroup(groupPosition);
+            if (convertView == null) {
+                holder = new GroupHolder();
+                convertView = inflater.inflate(R.layout.feed_source, parent, false);
+                holder.title = (TextView) convertView.findViewById(R.id.source_name);
+                convertView.setTag(holder);
+            } else {
+                holder = (GroupHolder) convertView.getTag();
+            }
+
+            holder.title.setText(item.title);
+
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public boolean isChildSelectable(int arg0, int arg1) {
+            return true;
         }
 
     }
@@ -217,76 +292,79 @@ public class AddActivity extends Activity {
 
         finally {
             try {
-                fOut.close();
+                if (fOut != null) {
+                    fOut.close();
+                }
             } catch (IOException e) {
                 //e.printStackTrace();
             }
         }
     }
 
-    // si existe entonces lee el registro
-    // para cargar los sources aceptados
-
-    public ArrayList<FeedSource> leerRegistros(String fName) {
-
-        FileInputStream fIn = null;
-        ObjectInputStream isr = null;
-        ArrayList<FeedSource> s = new ArrayList<FeedSource>();
-        FeedSource sour;
-        String texto = "";
-        File feedFile = getBaseContext().getFileStreamPath(fName);
-        if (!feedFile.exists())
-            return null;
-
-        try {
-            fIn = openFileInput(fName);
-            isr = new ObjectInputStream(fIn);
-
-            //System.out.println("Listasourcessize: " + lista_sources.size());
-            for (int i = 0; i < feedLink.size(); i++)
-            {
-                texto = isr.readLine();
-                sour = crearListaDinamica(texto);
-                s.add(sour);
-                System.out.println("Desde AddActivity, la linea leida es: " + texto);
-            }
-        }
-
-        catch (Exception e) {
-            //e.printStackTrace();
-        }
-
-        finally {
-            try {
-                fIn.close();
-            } catch (IOException e) {
-                //e.printStackTrace();
-            }
-        }
-
-        return s;
-
-    }
-
-    private FeedSource crearListaDinamica(String linea)
+    // funcion que retorna todas las categorias existentes
+    public ArrayList<String> obtenerCategorias()
     {
-        FeedSource sour = new FeedSource();
+        ArrayList<String> categorias = new ArrayList<String>();
 
-        String[] partes = linea.split(";");
-        sour.setURL(partes[0]);
-        sour.setNombre(partes[1]);
-        sour.setCategoria(partes[2]);
-        sour.setIdioma(partes[3]);
-        sour.setURLPagina(partes[4]);
+        for (int i = 0; i < feedLink.size(); i++)
+        {
+            FeedSource s = feedLink.get(i);
+            if (categorias != null && !categorias.contains(s.getCategoria()))
+                categorias.add(s.getCategoria());
+        }
+        return categorias;
+    }
 
-        // System.out.println("Verdadero/Falso:" + partes[2]);
+    // funcion que retorna todas los feed sources de cierta categoria
+    public ArrayList<String> obtenerCategoriasTipo(String tipo)
+    {
+        ArrayList<String> categorias_tipo = new ArrayList<String>();
 
-        if (linea.contains("trueverdadero"))
-            sour.setAceptado(true);
+        for (int i = 0; i < feedLink.size(); i++)
+        {
+            FeedSource s = feedLink.get(i);
+            if (s.getCategoria().equals(tipo))
+                categorias_tipo.add(s.getNombre());
+        }
+        return categorias_tipo;
+    }
 
-        else
-            sour.setAceptado(false);
+    public void llenarInfo(List<GroupItem> items, int cant_categorias)
+    {
+        for (int i = 0; i < cant_categorias; i++)
+        {
+            GroupItem item = new GroupItem();
+            String nombre_categoria = lista_categorias.get(i);
+            nombre_categoria = Character.toString(nombre_categoria.charAt(0)).toUpperCase() + nombre_categoria.substring(1);
+            item.title = nombre_categoria;
+            ArrayList<String> lista_categorias_tipo = obtenerCategoriasTipo(nombre_categoria.toLowerCase());
+            int cant_categorias_tipo = lista_categorias_tipo.size();
 
-        return sour;
+            for (int j = 0; j < cant_categorias_tipo; j++)
+            {
+                ChildItem child = new ChildItem();
+                String nombre_source = lista_categorias_tipo.get(j);
+                child.title = nombre_source;
+                child.hint = "";
+
+                item.items.add(child);
+            }
+
+            items.add(item);
+        }
+    }
+
+    public int getPosicion(String nombre_source)
+    {
+        int pos = 0;
+
+        for (int i = 0; i < feedLink.size(); i++)
+        {
+            if (feedLink.get(i).getNombre().equals(nombre_source)) {
+                pos = i;
+                break;
+            }
+        }
+        return pos;
     }
 }

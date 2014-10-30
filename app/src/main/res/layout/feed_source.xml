@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="2dp" >
+    android:layout_centerVertical="true"
+    android:paddingRight="10dp"
+    android:paddingLeft="50dp">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    
+        <ImageView
+            android:id="@+id/check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true"
 
-    <ImageView
-        android:id="@+id/category_img"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_launcher" />
-
-    <ImageView
-        android:id="@+id/check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="5dp"
-        android:contentDescription="@string/app_name"
-        android:visibility="invisible"
-        android:src="@drawable/action_accept" />
-
+            android:orientation="vertical"
+            android:visibility="invisible"
+            android:src="@drawable/action_accept" />
+    </RelativeLayout>
 
         <TextView
             android:id="@+id/source_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/category_img"
-            android:layout_centerVertical="true"
-            android:ellipsize="end"
-            android:layout_marginLeft="10dp"
-            android:maxLines="2"
-            android:text="@string/title"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>
