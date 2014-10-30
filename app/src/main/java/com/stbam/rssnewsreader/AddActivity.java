@@ -112,12 +112,10 @@ public class AddActivity extends Activity
 
     private static class ChildItem {
         String title;
-        String hint;
     }
 
     private static class ChildHolder {
         TextView title;
-        TextView hint;
         ImageView isChecked;
     }
 
@@ -181,7 +179,7 @@ public class AddActivity extends Activity
                 holder = new ChildHolder();
                 convertView = inflater.inflate(R.layout.feed_source, parent, false);
                 holder.title = (TextView) convertView.findViewById(R.id.source_name);
-                holder.hint = (TextView) convertView.findViewById(R.id.textHint);
+                //holder.hint = (TextView) convertView.findViewById(R.id.textHint);
                 holder.isChecked = (ImageView) convertView.findViewById(R.id.check);
                 convertView.setTag(holder);
             } else {
@@ -189,7 +187,7 @@ public class AddActivity extends Activity
             }
 
             holder.title.setText(item.title);
-            holder.hint.setText(item.hint);
+            //holder.hint.setText(item.hint);
 
             int pos = getPosicion(item.title);
 
@@ -229,8 +227,8 @@ public class AddActivity extends Activity
             GroupItem item = getGroup(groupPosition);
             if (convertView == null) {
                 holder = new GroupHolder();
-                convertView = inflater.inflate(R.layout.feed_source, parent, false);
-                holder.title = (TextView) convertView.findViewById(R.id.source_name);
+                convertView = inflater.inflate(R.layout.group_item, parent, false);
+                holder.title = (TextView) convertView.findViewById(R.id.textTitle);
                 convertView.setTag(holder);
             } else {
                 holder = (GroupHolder) convertView.getTag();
@@ -345,8 +343,6 @@ public class AddActivity extends Activity
                 ChildItem child = new ChildItem();
                 String nombre_source = lista_categorias_tipo.get(j);
                 child.title = nombre_source;
-                child.hint = "";
-
                 item.items.add(child);
             }
 
