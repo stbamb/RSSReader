@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.stbam.rssnewsreader.parser.FeedSource;
 import com.stbam.widgets.AnimatedExpandableListView;
 import java.io.FileOutputStream;
@@ -85,8 +87,13 @@ public class AddActivity extends Activity
 
                 int pos = getPosicion(item.title);
 
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_SHORT;
+                CharSequence text;
+
                 if (checked_item.getVisibility() == View.VISIBLE)
                 {
+                    text = "Se ha desubscrito a " + feedLink.get(pos).getNombre(); // para mostrar via Toast a cual feed source le quieto la subscripcion
                     checked_item.setVisibility(View.INVISIBLE);
                     feedLink.get(pos).setAceptado(false);
                     escribirRegistro("RSSReaderLog.stb");
@@ -94,11 +101,15 @@ public class AddActivity extends Activity
                 }
                 else
                 {
+                    text = "Se ha subscrito a " + feedLink.get(pos).getNombre(); // para mostrar via Toast a cual feed source le quieto la subscripcion
                     checked_item.setVisibility(View.VISIBLE);
                     feedLink.get(pos).setAceptado(true);
                     escribirRegistro("RSSReaderLog.stb");
                     escribirRegistro("RSSReaderFeed.stb");
                 }
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
 
                 return true;
             }

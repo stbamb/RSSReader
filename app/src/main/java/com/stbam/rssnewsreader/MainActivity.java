@@ -5,27 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.stbam.rssnewsreader.image.ImageLoader;
 import com.stbam.rssnewsreader.parser.DOMParser;
 import com.stbam.rssnewsreader.parser.FeedSource;
 import com.stbam.rssnewsreader.parser.RSSFeed;
-import com.stbam.rssnewsreader.parser.RSSItem;
 
 import java.util.ArrayList;
 
