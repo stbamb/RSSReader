@@ -11,9 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
-import android.widget.ShareActionProvider;
-import android.widget.TextView;
 
 import com.stbam.rssnewsreader.parser.RSSFeed;
 

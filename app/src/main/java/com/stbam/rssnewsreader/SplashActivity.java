@@ -102,6 +102,7 @@ public class SplashActivity extends Activity {
             Log.d("lista_sources:", "" + lista_sources.get(i).isAceptado());*/
         //}
 
+
         if (lista_sources_viejos == null)
             son_iguales = false;
         else
