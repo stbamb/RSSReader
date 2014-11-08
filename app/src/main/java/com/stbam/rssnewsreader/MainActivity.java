@@ -1,6 +1,7 @@
 package com.stbam.rssnewsreader;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,12 +32,15 @@ public class MainActivity extends Activity {
     CustomListAdapter adapter;
     public static ArrayList<FeedSource> feedLink;
     public static boolean empiezaVacio;
+    static MainActivity activityA;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        activityA = this; // hace que la actividad se iguale a this para luego poder terminarla
 
         // set the feed link for refresh
         feedLink = new SplashActivity().lista_sources2;
@@ -80,6 +84,10 @@ public class MainActivity extends Activity {
 
     }
 
+    public static MainActivity getInstance(){
+        return activityA;
+    }
+
     public void marcarLeido(int pos)
     {
         feed.getItem(pos).setSeen();
@@ -96,10 +104,14 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.refresh_option:
                 refreshList(item);
-                return (true);
+                return true;
 
             case R.id.add_option:
                 startAddActivity();
+                return true;
+
+            case R.id.account_option:
+                startAccountActivity();
                 return true;
 
         }
@@ -112,6 +124,14 @@ public class MainActivity extends Activity {
         startActivity(intent);
         //this.finish();
     }
+
+    public void startAccountActivity()
+    {
+        Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+        startActivity(intent);
+        //this.finish();
+    }
+
     public void refreshList(final MenuItem item) {
 
         feedLink = new AddActivity().feedLink;

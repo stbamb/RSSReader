@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebSettings.PluginState;
@@ -49,8 +50,11 @@ public class DetailFragment extends Fragment {
         ws.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         ws.setBuiltInZoomControls(false);
         ws.setSupportZoom(false);
+        ws.setPluginState(PluginState.ON);
         ws.setUserAgentString("Mozilla/5.0 (Linux; U; Android 2.0; en-us; Droid Build/ESD20) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17");
         desc.setWebViewClient(new WebViewClient());
+
+
 
         // Set the views
         title.setText(fFeed.getItem(fPos).getTitle());
