@@ -6,26 +6,31 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.CountDownTimer;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.facebook.*;
-import com.facebook.android.Facebook;
-import com.facebook.android.Util;
 import com.facebook.model.*;
 import com.facebook.widget.LoginButton;
+import com.mongodb.util.JSON;
 
-import org.apache.http.client.protocol.RequestDefaultHeaders;
-import org.json.JSONArray;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class LoginActivity extends Activity {
 
@@ -33,18 +38,23 @@ public class LoginActivity extends Activity {
     public static String current_user_id = "";
     public static String current_user_email = "";
     public static boolean terminado = false;
-    JSONObject jsonObj;
+    public JSONObject jsonObj;
+    public static String respuesta_servidor;
+    public static boolean proceso_logueo_terminado = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        LoginButton authButton = (LoginButton) findViewById(R.id.authButton3);
+        authButton.setReadPermissions(Arrays.asList("public_profile", "email"));
 
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
         llenarInfoFacebook();
 
@@ -64,24 +74,61 @@ public class LoginActivity extends Activity {
             e.printStackTrace();
         }
 
-        System.out.println(jsonObj);
+        postData b = new postData();
+        b.execute();
+
+        while (!proceso_logueo_terminado)
+            abc++;
+
+        System.out.println("Esta fue la respuesta del servidor: " + respuesta_servidor);
+
+        if (respuesta_servidor.equals("logged in"))
+        {
+
+            AlertDialog alertDialog1 = new AlertDialog.Builder(LoginActivity.this).create();
+
+            alertDialog1.setTitle("RSS Reader");
+            alertDialog1.setMessage("Usted ya se encuentra registrado.");
+            alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    startInitialActivity();
+                }
+            });
+
+            alertDialog1.show();
+
+        }
+
+        else {
 
 
-        AlertDialog alertDialog1 = new AlertDialog.Builder(
-                LoginActivity.this).create();
+            AlertDialog alertDialog1 = new AlertDialog.Builder(LoginActivity.this).create();
 
-        alertDialog1.setTitle("RSS Reader");
-        alertDialog1.setMessage("Usuario registrado exitosamente");
-        alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
+            alertDialog1.setTitle("RSS Reader");
+            alertDialog1.setMessage("Usuario registrado exitosamente");
+            alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
 
-            public void onClick(DialogInterface dialog, int which) {
-                startSplashActivity();
-            }
-        });
+                public void onClick(DialogInterface dialog, int which) {
+                    startSplashActivity();
+                }
+            });
 
-        alertDialog1.show();
+            alertDialog1.show();
+        }
 
 
+    }
+
+
+    public void startInitialActivity() {
+
+        // launch List activity
+        Intent intent = new Intent(LoginActivity.this, InitialActivity.class);
+        startActivity(intent);
+
+        // kill this activity
+        finish();
     }
 
     public void startSplashActivity() {
@@ -96,6 +143,8 @@ public class LoginActivity extends Activity {
 
     public void llenarInfoFacebook()
     {
+        LoginButton authButton = (LoginButton) findViewById(R.id.authButton3);
+        authButton.setReadPermissions(Arrays.asList("basic_info", "email"));
         // start Facebook Login
         Session.openActiveSession(this, true, new Session.StatusCallback() {
 
@@ -120,8 +169,6 @@ public class LoginActivity extends Activity {
                                 current_user_name = user_name.getText().toString();
                                 current_user_id = user.getId();
                                 current_user_email = (String) user.asMap().get("email");
-                                GraphObject responseGraphObject = response.getGraphObject();
-
                             }
                         }
                     }).executeAsync();
@@ -149,7 +196,6 @@ public class LoginActivity extends Activity {
                         current_user_name = user.getName();
                         current_user_email = (String) user.asMap().get("email");
                         terminado = true;
-                        System.out.println("La cochinada esta esta llegando hasta aqui");
                     }
                 }
             }).executeAndWait();
@@ -167,4 +213,53 @@ public class LoginActivity extends Activity {
         }
 
     }
+
+    public class postData extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+            try {
+
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppostreq = new HttpPost("http://proyecto2.cloudapp.net:8080/login");
+
+                StringEntity se = new StringEntity(jsonObj.toString());
+
+                se.setContentType("application/json;charset=UTF-8");
+                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
+                httppostreq.setEntity(se);
+
+                HttpResponse httpresponse = httpclient.execute(httppostreq);
+
+                String responseText = null;
+                try {
+                    responseText = EntityUtils.toString(httpresponse.getEntity());
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                respuesta_servidor = responseText;
+
+            }catch (Exception ex) {
+                System.out.println(ex.toString());
+                // handle exception here
+            } finally {
+                //httpClient.getConnectionManager().shutdown();
+            }
+
+            proceso_logueo_terminado = true;
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            proceso_logueo_terminado = true;
+        }
+    }
+
+
 }

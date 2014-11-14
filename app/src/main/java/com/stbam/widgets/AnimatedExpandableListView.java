@@ -23,6 +23,11 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
+
+// Codigo tomado de https://github.com/idunnololz/AnimatedExpandableListView
+// Basicamente en una lista que se puede expandir, revelando asi una sublista
+// Fue tomada porque incluye una buena animacion
+
 /**
  * This class defines an ExpandableListView which supports animations for
  * collapsing and expanding groups.

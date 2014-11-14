@@ -1,34 +1,39 @@
 package com.stbam.rssnewsreader;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.stbam.rssnewsreader.parser.RSSFeed;
+import java.util.Arrays;
+import java.util.List;
 
 public class DetailFragment extends Fragment {
 
-    private int fPos;
+    public static int fPos;
+    public static int fPos2; // esta variable se usa para saber cual historia publicar a Facebook desde
     RSSFeed fFeed;
+
+        // variables utilizadas para Facebook
+        private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+        private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
+        private boolean pendingPublishReauthorization = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fFeed = (RSSFeed)getArguments().getSerializable("feed");
         fPos = getArguments().getInt("pos");
+
     }
 
     @Override
@@ -36,10 +41,10 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.detail_fragment, container, false);
 
         TextView title = (TextView)view.findViewById(R.id.title);
+        Button compartir = (Button) view.findViewById(R.id.share);
         WebView desc = (WebView)view.findViewById(R.id.desc);
         ScrollView sv = (ScrollView)view.findViewById(R.id.sv);
         sv.setVerticalFadingEdgeEnabled(true);
-
 
         // todas las propiedades del WebView
 
@@ -54,16 +59,31 @@ public class DetailFragment extends Fragment {
         ws.setUserAgentString("Mozilla/5.0 (Linux; U; Android 2.0; en-us; Droid Build/ESD20) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17");
         desc.setWebViewClient(new WebViewClient());
 
+        fPos2 = fPos;
 
-
-        // Set the views
+        if (fPos == fFeed.getItemCount() - 2)
+            fPos2 += 2;
         title.setText(fFeed.getItem(fPos).getTitle());
+        System.out.println("Desde DetailFragment esta es la posicion del item: " + fPos2);
+        //System.out.println("Largo actual del feed: " + fFeed.getItemCount());
+
+       // System.out.println(fFeed.getItem(fPos).getDescription());
 
         String data = "<html><body><center>" + fFeed.getItem(fPos).getDescription() + "</center></body></html>";
         desc.loadData(data, "text/html; charset=UTF-8", null);
 
+        if (fFeed.getItem(fPos).isCompartido())
+            compartir.setVisibility(View.INVISIBLE);
+
         // para ver como se forman los tags HTML que carga el WebView
         //Log.d("HTML", data);
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
+        //.onSaveInstanceState(outState);
     }
 }

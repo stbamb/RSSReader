@@ -9,6 +9,10 @@ import java.util.Map.Entry;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+// El codigo a continuacion fue tomado de https://github.com/thest1/LazyList/tree/master/src/com/fedorvlasov/lazylist
+// Basicamente el contenido de la carpeta image es solomante para poder cargar
+// los thumbnails de cada una de las noticias en el Main activity
+
 public class MemoryCache {
 
 	private static final String TAG = "MemoryCache";

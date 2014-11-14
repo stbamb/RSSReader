@@ -3,6 +3,10 @@ package com.stbam.rssnewsreader.image;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+// El codigo a continuacion fue tomado de https://github.com/thest1/LazyList/tree/master/src/com/fedorvlasov/lazylist
+// Basicamente el contenido de la carpeta image es solomante para poder cargar
+// los thumbnails de cada una de las noticias en el Main activity
+
 public class Utils {
 	public static void CopyStream(InputStream is, OutputStream os) {
 		final int buffer_size = 1024;

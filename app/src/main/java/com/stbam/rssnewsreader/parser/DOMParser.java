@@ -1,13 +1,7 @@
 package com.stbam.rssnewsreader.parser;
 
-import android.util.Log;
-
-import com.stbam.rssnewsreader.SplashActivity;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.jsoup.Jsoup;
@@ -21,12 +15,19 @@ import org.xml.sax.InputSource;
 /**
  * Created by Esteban on 07-Oct-14.
  */
+
+// Codigo basado en el tutorial de http://techiedreams.com/android-simple-rss-reader
+// y obviamente adaptado a nuestras necesidades
+
+
 public class DOMParser {
 
     private RSSFeed _feed = new RSSFeed();
 
     public RSSFeed parseXml(String xml, String nombre) {
 
+        // se definen diferentes urls porque para leer articulos de TheVerge.com y Polygon.com
+        // es necesario un metodo distinto
         String theverge_burner = "http://feeds.feedburner.com/theverge/MJyr";
         String polygon_burner = "http://feeds.feedburner.com/polygon/yhac";
         String theverge = "http://www.theverge.com/rss/frontpage";
@@ -57,6 +58,9 @@ public class DOMParser {
         return node.getNodeValue();
     }
 
+    // este y el siguiete metodo sirven para parsear el documento leido desde el URL
+    // encuentra cada uno de los elementos (noticias) y saca por aparte
+    // cada uno de sus atributos para asi asignarlos a una instancia del objeto RSSItem
     private void leerOtrosFeed(URL url, String nombre)
     {
         try {
@@ -133,6 +137,9 @@ public class DOMParser {
         }
     }
 
+    // este y el siguiete metodo sirven para parsear el documento leido desde el URL
+    // encuentra cada uno de los elementos (noticias) y saca por aparte
+    // cada uno de sus atributos para asi asignarlos a una instancia del objeto RSSItem
     private void leerPolygonYTheVerge(URL url, String nombre)
     {
         try {

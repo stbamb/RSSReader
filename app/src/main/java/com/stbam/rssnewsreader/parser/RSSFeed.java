@@ -7,19 +7,29 @@ import java.util.Vector;
 /**
  * Created by Esteban on 07-Oct-14.
  */
+
+// Esta clase representa todo el feed, es decir todas las noticias que
+// lo que se puede ver en un determinado momento desde MainActivity
+// todas las noticias en un mismo objeto
 public class RSSFeed implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private int _itemCount = 0;
     private List _itemList;
 
-    RSSFeed() {
+    public RSSFeed() {
         _itemList = new Vector(0);
     }
 
-    void addItem(RSSItem item) {
+    public void addItem(RSSItem item) {
         _itemList.add(item);
         _itemCount++;
+    }
+
+    public void removeItem(int pos)
+    {
+        _itemList.remove(pos);
+        _itemCount--;
     }
 
     public void emptyFeed()

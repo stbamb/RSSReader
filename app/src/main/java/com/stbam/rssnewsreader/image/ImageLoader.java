@@ -23,6 +23,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
+// El codigo a continuacion fue tomado de https://github.com/thest1/LazyList/tree/master/src/com/fedorvlasov/lazylist
+// Basicamente el contenido de la carpeta image es solomante para poder cargar
+// los thumbnails de cada una de las noticias en el Main activity
+
 public class ImageLoader {
 
 	MemoryCache memoryCache = new MemoryCache();

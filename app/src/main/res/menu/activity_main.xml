@@ -3,6 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/search_option"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="ifRoom"
+        android:title="Búsqueda"
+        android:textColor="@color/white"
+        android:hint="hola soy german"
+        android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+        android:actionViewClass="android.widget.SearchView" />
+
+    <item
         android:id="@+id/refresh_option"
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom"
@@ -20,6 +30,12 @@
                 android:icon="@drawable/ic_action_new"
                 android:showAsAction="always|withText"
                 android:title="Agregar nuevas fuentes"/>
+
+            <item
+                android:id="@+id/youtube_option"
+                android:icon="@drawable/ic_action_play_over_video"
+                android:showAsAction="always|withText"
+                android:title="Ver videos de Youtube"/>
 
             <item
                 android:id="@+id/account_option"

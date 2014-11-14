@@ -23,4 +23,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/jsoup-1.8.1.jar')
     compile project(':facebook')
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+    compile files('libs/mongo-java-driver-2.11.2.jar')
 }

@@ -4,6 +4,10 @@ import java.io.File;
 
 import android.content.Context;
 
+// El codigo a continuacion fue tomado de https://github.com/thest1/LazyList/tree/master/src/com/fedorvlasov/lazylist
+// Basicamente el contenido de la carpeta image es solomante para poder cargar
+// los thumbnails de cada una de las noticias en el Main activity
+
 public class FileCache {
 
 	private File cacheDir;

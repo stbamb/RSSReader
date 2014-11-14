@@ -27,6 +27,7 @@ public class AccountActivity extends Activity {
         llenarInfoFacebook();
         LoginButton authButton = (LoginButton) findViewById(R.id.authButton2);
 
+        // se le asigna un listener al boton de facebook
         authButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -39,6 +40,9 @@ public class AccountActivity extends Activity {
                 // sirve para cerrar MainActivity
                 startInitialActivity();
                 android.os.Process.killProcess(android.os.Process.myPid());
+                // se cierra la sesion y se mata la primera actividad en la pila de android
+
+                // inmediatamente despues la app vuelve a la pagina principal
 
 
 
@@ -47,6 +51,7 @@ public class AccountActivity extends Activity {
     }
 
 
+    // se crea el menu de opciones
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -64,6 +69,8 @@ public class AccountActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    // este metodo tambien es de Facebook
+    // este metodo es llamado cuando se hace click en el boton de login de FB
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -71,6 +78,7 @@ public class AccountActivity extends Activity {
        // startInitialActivity();
     }
 
+    // este metodo llama a la siguiente actividad a ser ejecutada
     public void startInitialActivity() {
 
         // launch List activity
@@ -81,6 +89,10 @@ public class AccountActivity extends Activity {
         finish();
     }
 
+    // codigo de Facebook
+    // como su nombre la informacion
+    // dicha informacion proviene de Facebook
+    // se necesita tener FB SDK para que funcione
     public void llenarInfoFacebook()
     {
         // start Facebook Login
@@ -98,6 +110,9 @@ public class AccountActivity extends Activity {
                         @Override
                         public void onCompleted(GraphUser user, Response response) {
                             if (user != null) {
+
+                                // encuentra cada uno de los labels y les asigna el nombre
+                                // y la informacion que les corresponde
                                 TextView user_name = (TextView) findViewById(R.id.label1);
                                 TextView user_email = (TextView) findViewById(R.id.label2);
                                 TextView user_id = (TextView) findViewById(R.id.label3);

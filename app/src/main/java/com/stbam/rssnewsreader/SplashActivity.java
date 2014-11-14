@@ -20,6 +20,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+// esta es la clase que abre la aplicacion cuando hay contenido que cargar
+// se utiliza basicamente para cargar el contenido y para tener todo listo
+// para que cuando se llegue a la actividad principal para que las noticias esten listas
+// Nos basamos en la idea del tutorial de http://techiedreams.com/android-simple-rss-reader/
 public class SplashActivity extends Activity {
 
     public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json"; // para pruebas
@@ -64,7 +68,6 @@ public class SplashActivity extends Activity {
 
         // llamada a la funcion que recolecta los JSON y los convierte en instancias
         // de la clase FeedSource y los mete en lista_sources
-
         getAllSources a = new getAllSources();
         a.execute();
         int abc = 0;
@@ -110,6 +113,9 @@ public class SplashActivity extends Activity {
 
         System.out.println("Los feed sources cambiaron: " + !son_iguales);
 
+        // una serie de condiciones para validar si es necesario para saber si los registros de sources
+        // cambiaron
+
         if (!sourceFile.exists() || !son_iguales)
         {
             escribirRegistro(sourceName);
@@ -141,7 +147,7 @@ public class SplashActivity extends Activity {
 		ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (conMgr.getActiveNetworkInfo() == null) {
 
-			// No connectivity. Check if feed File exists
+			// no hay conexion a internet
 			if (!feedFile.exists()) {
 
 				// No connectivity & Feed file doesn't exist: Show alert to exit
@@ -170,7 +176,7 @@ public class SplashActivity extends Activity {
 
 		} else {
 
-			// Connected - Start parsing
+			// se empiezan a parsear los sources
 			new AsyncLoadXMLFeed().execute();
 
 		}
@@ -202,6 +208,7 @@ public class SplashActivity extends Activity {
         return bandera;
     }
 
+    // sirve para llamar otro activity, de una forma mas ordenada
 	private void startListActivity(RSSFeed feed) {
 
 		Bundle bundle = new Bundle();
@@ -217,6 +224,7 @@ public class SplashActivity extends Activity {
 
 	}
 
+    // clase asincrona que cargar el contenido desde los urls dados
 	private class AsyncLoadXMLFeed extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -253,7 +261,7 @@ public class SplashActivity extends Activity {
 
 	}
 
-	// Method to write the feed to the File
+	// escribe los sources en un archivo de bitacora
 	private void WriteFeed(RSSFeed data) {
 
 		FileOutputStream fOut = null;
@@ -279,6 +287,7 @@ public class SplashActivity extends Activity {
 		}
 	}
 
+    // otro metodo para escribir bitacoras
     public void escribirRegistro(String file_name) {
 
         FileOutputStream fOut = null;
@@ -327,7 +336,6 @@ public class SplashActivity extends Activity {
 
     // si existe entonces lee el registro
     // para cargar los sources aceptados
-
     public ArrayList<FeedSource> leerRegistros(String fName) {
 
         FileInputStream fIn = null;
@@ -369,6 +377,8 @@ public class SplashActivity extends Activity {
 
     }
 
+    // crea una lista, desde los archivos de bitacora leidos
+    // esta lista sirve para saber si previamente un source habia sido aceptado o no
     private FeedSource crearListaDinamica(String linea)
     {
         FeedSource sour = new FeedSource();
@@ -391,7 +401,7 @@ public class SplashActivity extends Activity {
         return sour;
     }
 
-	// Method to read the feed from the File
+	// Metodo para leer archivo de bitacora
 	private RSSFeed ReadFeed(String fName) {
 
 		FileInputStream fIn = null;
@@ -435,7 +445,7 @@ public class SplashActivity extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
             // Creating service handler class instance
-            JSONParser sh = new JSONParser();
+            JSONParser sh = new JSONParser(new JSONObject());
             boolean esSeguro = false;
 
             // Making a request to url and getting response

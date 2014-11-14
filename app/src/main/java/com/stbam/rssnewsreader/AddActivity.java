@@ -46,9 +46,13 @@ public class AddActivity extends Activity
 
         llenarInfo(items, cant_categorias);
 
+        // sirve para asignar cada uno de las categorias
+        // y se liga con la UI, se crea un Item en la lista
+        // por cada una de las categorias existentes
         adapter = new ExampleAdapter(this);
         adapter.setData(items);
 
+        // animaciones
         listView = (AnimatedExpandableListView) findViewById(R.id.listView2);
         listView.setVerticalFadingEdgeEnabled(true);
         listView.setAdapter(adapter);
@@ -73,6 +77,9 @@ public class AddActivity extends Activity
 
         });
 
+        // toda la logica cuando un elemento de una categoria
+        // es presionada
+        // se le asigna un Listener a la lista principal
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
@@ -90,6 +97,9 @@ public class AddActivity extends Activity
                 Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
                 CharSequence text;
+
+                // logica, si un elemento ya tenia un check
+                // entonces se quita el check, de lo contrario se pone
 
                 if (checked_item.getVisibility() == View.VISIBLE)
                 {
@@ -159,6 +169,9 @@ public class AddActivity extends Activity
     /**
      * Adapter for our list of {@link GroupItem}s.
      */
+
+    // este es el adapatador para La lista animada expandible
+    // sirve para conectar los datos con la UI
     private class ExampleAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter {
         private LayoutInflater inflater;
 
@@ -338,6 +351,8 @@ public class AddActivity extends Activity
         return categorias_tipo;
     }
 
+    // asigna los subelementos a las categorias
+    // para que asi puedan ser mostradas al usuario
     public void llenarInfo(List<GroupItem> items, int cant_categorias)
     {
         for (int i = 0; i < cant_categorias; i++)
@@ -361,6 +376,8 @@ public class AddActivity extends Activity
         }
     }
 
+    // obtiene la posicion de un determinado elemento en feedLink
+    // se usa a la hora de getView, para saber si ponerle check o no al elemento
     public int getPosicion(String nombre_source)
     {
         int pos = 0;

@@ -3,6 +3,9 @@ package com.stbam.rssnewsreader.parser;
 /**
  * Created by Esteban on 10/24/2014.
  */
+
+// Esta clase representa cada uno de los sources que lee la aplicacion
+// theverge y polygon son ejemplos de ellos
 public class FeedSource {
 
     private String URL;
@@ -11,6 +14,7 @@ public class FeedSource {
     private String categoria;
     private String idioma;
     private boolean aceptado = false;
+
 
     public String getURLPagina() {
         return URLPagina;
@@ -59,4 +63,6 @@ public class FeedSource {
     public void setIdioma(String idioma) {
         this.idioma = idioma;
     }
+
+
 }

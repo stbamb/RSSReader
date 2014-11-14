@@ -1,9 +1,11 @@
 package com.stbam.rssnewsreader;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -17,22 +19,26 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import com.stbam.rssnewsreader.image.ImageLoader;
 import com.stbam.rssnewsreader.parser.DOMParser;
 import com.stbam.rssnewsreader.parser.FeedSource;
+import com.stbam.rssnewsreader.parser.JSONParser;
 import com.stbam.rssnewsreader.parser.RSSFeed;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
-    RSSFeed feed;
+    public static RSSFeed feed; // en caso de que algo falle de la nada, entonces es esta linea, quitar el public static a esta linea
     ListView lv;
     CustomListAdapter adapter;
     public static ArrayList<FeedSource> feedLink;
     public static boolean empiezaVacio;
     static MainActivity activityA;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +78,8 @@ public class MainActivity extends Activity {
 
                 marcarLeido(pos);
 
+                System.out.println("Ha hecho click en el item de la posicion: " + pos);
+
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("feed", feed);
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
@@ -84,10 +92,6 @@ public class MainActivity extends Activity {
 
     }
 
-    public static MainActivity getInstance(){
-        return activityA;
-    }
-
     public void marcarLeido(int pos)
     {
         feed.getItem(pos).setSeen();
@@ -96,7 +100,16 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         new MenuInflater(this).inflate(R.menu.activity_main, menu);
-        return (super.onCreateOptionsMenu(menu));
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search_option).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView textView = (TextView) searchView.findViewById(id);
+        textView.setTextColor(Color.WHITE);
+
+        return true;
     }
 
     @Override
@@ -110,6 +123,10 @@ public class MainActivity extends Activity {
                 startAddActivity();
                 return true;
 
+            case R.id.youtube_option:
+                startYouTubeActivity();
+                return true;
+
             case R.id.account_option:
                 startAccountActivity();
                 return true;
@@ -121,6 +138,13 @@ public class MainActivity extends Activity {
     public void startAddActivity()
     {
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        startActivity(intent);
+        //this.finish();
+    }
+
+    public void startYouTubeActivity()
+    {
+        Intent intent = new Intent(MainActivity.this, PlayerViewDemoActivity.class);
         startActivity(intent);
         //this.finish();
     }

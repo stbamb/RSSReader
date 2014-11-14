@@ -8,24 +8,33 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 /**
  * Created by Esteban on 10/25/2014.
  */
+
+// Un parser tomado del tutorial de http://techiedreams.com/android-simple-rss-reader
+// y adaptado a nuestras necesidades
 
 public class JSONParser {
 
     static String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
+    public JSONObject jsonobj;
 
-    public JSONParser() {
-
+    public JSONParser(JSONObject s) {
+        jsonobj = s;
     }
 
     /**
@@ -37,7 +46,7 @@ public class JSONParser {
         return this.makeServiceCall(url, method, null);
     }
 
-    /**
+    /*
      * Making service call
      * @url - url to make request
      * @method - http request method
@@ -54,9 +63,15 @@ public class JSONParser {
             // Checking http request method type
             if (method == POST) {
                 HttpPost httpPost = new HttpPost(url);
+                StringEntity se = new StringEntity(jsonobj.toString(), HTTP.UTF_8);
+                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httpPost.setEntity(se);
+
                 // adding post params
                 if (params != null) {
                     httpPost.setEntity(new UrlEncodedFormEntity(params));
+                    StringEntity entity = new StringEntity(params.toString(), "UTF-8");
+                    entity.setContentType("application/json");
                 }
 
                 httpResponse = httpClient.execute(httpPost);
