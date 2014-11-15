@@ -43,8 +43,10 @@ public class DOMParser {
 
         if (xml.equals(theverge) || xml.equals(theverge_burner) || xml.equals(polygon) || xml.equals(polygon_burner))
             leerPolygonYTheVerge(url, nombre);
-        else
+        else if (nombre.equals("LifeHacker") || nombre.equals("PhoneArena"))
             leerOtrosFeed(url, nombre);
+        else
+            leerTipoRaro(url, nombre);
 
 
         // Return the final feed once all the Items are added to the RSSFeed
@@ -106,10 +108,14 @@ public class DOMParser {
 
                             // Parse the html description to get the image url
                             String html = theString;
-                            org.jsoup.nodes.Document docHtml = Jsoup
-                                    .parse(html);
+
+                            org.jsoup.nodes.Document docHtml = Jsoup.parse(html);
                             Elements imgEle = docHtml.select("img");
-                            _item.setImage(imgEle.attr("src"));
+
+                            if (nombre.equals("PhoneArena"))
+                                _item.setImage("http:" + imgEle.attr("src"));
+                            else
+                                _item.setImage(imgEle.attr("src"));
                         }
 
                         else if ("link".equals(nodeName)) {
@@ -177,10 +183,10 @@ public class DOMParser {
                     org.jsoup.nodes.Document docHtml = Jsoup
                             .parse(html);
                     Elements imgEle = docHtml.select("img");
-                    entry.setImage(imgEle.attr("src"));
+                    entry.setImage("http:" + imgEle.attr("src"));
+                    //System.out.println(entry.getImage());
                     entry.set_source_page(nombre);
 
-                    //Log.d("Formato fecha:", entry.getDate());
 
                     // se agrega el item recien creado a la lista para devolverla
                     _feed.addItem(entry);
@@ -188,6 +194,61 @@ public class DOMParser {
                 }
             }
 
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void leerTipoRaro(URL url, String nombre)
+    {
+        try {
+            // Create required instances
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            // Parse the xml
+            Document doc = db.parse(new InputSource(url.openStream()));
+
+            // Get all <item> tags.
+            NodeList nl = doc.getElementsByTagName("item");
+            int largo = nl.getLength();
+
+            for (int i = 0; i < largo; i++)
+            {
+                Node entrada = nl.item(i);
+
+                if (entrada.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element element2 = (Element) entrada;
+
+                    RSSItem entry = new RSSItem();
+
+                    entry.setTitle(getValue("title", element2));
+
+                    if (nombre.equals("FoodSpin"))
+                        entry.setDescription(getValue("description", element2));
+                    else
+                        entry.setDescription(getValue("content:encoded", element2));
+
+                    entry.setLink(getValue("link", element2));
+
+                    // esto sirve para sacar el link de la imagen
+
+                    String html = entry.getDescription();
+                    org.jsoup.nodes.Document docHtml = Jsoup
+                            .parse(html);
+                    Elements imgEle = docHtml.select("img");
+                    entry.setImage(imgEle.attr("src"));
+                    //System.out.println(entry.getImage());
+                    entry.set_source_page(nombre);
+
+
+                    // se agrega el item recien creado a la lista para devolverla
+                    _feed.addItem(entry);
+
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

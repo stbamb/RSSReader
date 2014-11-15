@@ -54,7 +54,6 @@ public class DetailActivity extends FragmentActivity {
         uiHelper = new UiLifecycleHelper(this, null);
         uiHelper.onCreate(savedInstanceState);
 
-
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -113,7 +112,6 @@ public class DetailActivity extends FragmentActivity {
 			bundle.putSerializable("feed", feed);
 			bundle.putInt("pos", position);
 			frag.setArguments(bundle);
-            System.out.println("Position: " + position);
 
 			return frag;
 
@@ -148,8 +146,6 @@ public class DetailActivity extends FragmentActivity {
                 position = 0;
 
             feed.getItem(position).setCompartido(true);
-
-            //System.out.println("Desde DetailActivity este es la posicion del elemento a publicar: " + position);
 
             postParams.putString("name", feed.getItem(position).getTitle());
             postParams.putString("caption", feed.getItem(position).get_source_page());

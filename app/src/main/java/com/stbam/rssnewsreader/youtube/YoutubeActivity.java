@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.youtube;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.stbam.rssnewsreader.DeveloperKey;
+import com.stbam.rssnewsreader.R;
+import com.stbam.rssnewsreader.youtube.YouTubeFailureRecoveryActivity;
 
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 /**
  * A simple YouTube Android API demo application which shows how to create a simple application that
@@ -28,22 +33,30 @@ import android.os.Bundle;
  * <p>
  * Note, to use a {@link YouTubePlayerView}, your activity must extend {@link YouTubeBaseActivity}.
  */
-public class PlayerViewDemoActivity extends YouTubeFailureRecoveryActivity {
+public class YoutubeActivity extends YouTubeFailureRecoveryActivity {
+
+    private static String youTube_link;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.playerview_demo);
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.playerview_demo);
 
-    YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
-    youTubeView.initialize(DeveloperKey.DEVELOPER_KEY, this);
+      ActionBar actionBar = getActionBar();
+      actionBar.setDisplayHomeAsUpEnabled(true);
+
+      youTube_link = getIntent().getExtras().getString("videoCue");
+
+      YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+      youTubeView.initialize(DeveloperKey.DEVELOPER_KEY, this);
   }
 
   @Override
   public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
       boolean wasRestored) {
     if (!wasRestored) {
-      player.cueVideo("wk-PY2dBKaA");
+        youTube_link = getIntent().getExtras().getString("videoCue");
+        player.cueVideo(youTube_link);
     }
   }
 
@@ -51,5 +64,20 @@ public class PlayerViewDemoActivity extends YouTubeFailureRecoveryActivity {
   protected YouTubePlayer.Provider getYouTubePlayerProvider() {
     return (YouTubePlayerView) findViewById(R.id.youtube_view);
   }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                // app icon in action bar clicked; finish activity to go home
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

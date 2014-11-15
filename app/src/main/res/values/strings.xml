@@ -22,7 +22,7 @@
     <color name="white">#FFFFFF</color>
 
     <string name="title_activity_search">SearchActivity</string>
-
     <string name="error_player">Ha ocurrido un error mientras intentábamos reproducir el video de YouTube (%1$s)</string>
+    <string name="title_activity_categories">CategoriesActivity</string>
 
 </resources>

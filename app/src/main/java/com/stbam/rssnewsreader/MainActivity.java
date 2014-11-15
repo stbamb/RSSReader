@@ -2,7 +2,6 @@ package com.stbam.rssnewsreader;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
 import com.stbam.rssnewsreader.image.ImageLoader;
 import com.stbam.rssnewsreader.parser.DOMParser;
 import com.stbam.rssnewsreader.parser.FeedSource;
-import com.stbam.rssnewsreader.parser.JSONParser;
 import com.stbam.rssnewsreader.parser.RSSFeed;
+import com.stbam.rssnewsreader.youtube.CategoriesActivity;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
@@ -49,7 +48,7 @@ public class MainActivity extends Activity {
         activityA = this; // hace que la actividad se iguale a this para luego poder terminarla
 
         // set the feed link for refresh
-        feedLink = new SplashActivity().lista_sources2;
+        feedLink = new SplashActivity().lista_sources;
 
         // Get feed form the file
         feed = (RSSFeed) getIntent().getExtras().get("feed");
@@ -76,10 +75,6 @@ public class MainActivity extends Activity {
 
                 // llamar a la funcion que marca el articulo como leido
 
-                marcarLeido(pos);
-
-                System.out.println("Ha hecho click en el item de la posicion: " + pos);
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("feed", feed);
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
@@ -90,11 +85,6 @@ public class MainActivity extends Activity {
             }
         });
 
-    }
-
-    public void marcarLeido(int pos)
-    {
-        feed.getItem(pos).setSeen();
     }
 
     @Override
@@ -144,7 +134,7 @@ public class MainActivity extends Activity {
 
     public void startYouTubeActivity()
     {
-        Intent intent = new Intent(MainActivity.this, PlayerViewDemoActivity.class);
+        Intent intent = new Intent(MainActivity.this, CategoriesActivity.class);
         startActivity(intent);
         //this.finish();
     }

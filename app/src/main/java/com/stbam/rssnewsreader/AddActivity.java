@@ -40,7 +40,7 @@ public class AddActivity extends Activity
 
         final List<GroupItem> items = new ArrayList<GroupItem>();
 
-        feedLink = new SplashActivity().lista_sources2;
+        feedLink = new SplashActivity().lista_sources;
         lista_categorias = obtenerCategorias();
         int cant_categorias = lista_categorias.size();
 
@@ -345,7 +345,7 @@ public class AddActivity extends Activity
         for (int i = 0; i < feedLink.size(); i++)
         {
             FeedSource s = feedLink.get(i);
-            if (s.getCategoria().equals(tipo))
+            if (s.getCategoria().toLowerCase().equals(tipo.toLowerCase()))
                 categorias_tipo.add(s.getNombre());
         }
         return categorias_tipo;

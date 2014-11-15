@@ -27,7 +27,7 @@ import org.json.JSONObject;
 public class SplashActivity extends Activity {
 
     public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json"; // para pruebas
-    public static String url2 = "http://72.2.118.65:3000/feeds"; // para progra
+    public static String url2 = "http://proyecto2.cloudapp.net:8080/feeds"; // para progra
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources2 = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources_viejos = new ArrayList<FeedSource>();
@@ -73,76 +73,6 @@ public class SplashActivity extends Activity {
         int abc = 0;
         while (sinterminar)
             abc++;
-
-        // arreglar lo que esta despues de este comentario
-        // se debe hacer una funcion que "recuerde"
-        // cuales son los feed sources viejos
-        // para compararlos con los nuevos
-        // y si cambiaron, entonces volver a crear los archivos necesarios
-
-        boolean son_iguales;
-        lista_sources_viejos = leerRegistros(sourceName);
-
-        /*if (lista_sources != null)
-        {
-            for (int i = 0; i < lista_sources.size(); i++)
-            {
-                System.out.println("Esta funcionando:" + lista_sources.get(i).getURL());
-                //Log.d("Esta funcionando:", "" + lista_sources2.get(i).getNombre());
-                //Log.d("Esta funcionando:", "" + lista_sources2.get(i).isAceptado());
-            }
-        }*/
-
-        //System.out.println(lista_sources_viejos.size());
-
-        /*for (int i = 0; i < lista_sources_viejos.size(); i++)
-        {
-            System.out.println("lista_sources_viejos:" + lista_sources_viejos.get(i).getNombre());
-            //System.out.println("lista_sources:" + lista_sources.get(i).getNombre());
-            /*Log.d("lista_sources_viejos:", "" + lista_sources_viejos.get(i).getNombre());
-            Log.d("lista_sources:", "" + lista_sources.get(i).getNombre());
-            Log.d("lista_sources_viejos:", "" + lista_sources_viejos.get(i).isAceptado());
-            Log.d("lista_sources:", "" + lista_sources.get(i).isAceptado());*/
-        //}
-
-
-        if (lista_sources_viejos == null)
-            son_iguales = false;
-        else
-            son_iguales = cambiaronFeedSources();
-
-        System.out.println("Los feed sources cambiaron: " + !son_iguales);
-
-        // una serie de condiciones para validar si es necesario para saber si los registros de sources
-        // cambiaron
-
-        if (!sourceFile.exists() || !son_iguales)
-        {
-            escribirRegistro(sourceName);
-            System.out.println("Desde el SplashActivity se creo el archivo de los feed sources actuales.");
-        }
-        else
-            System.out.println("No se creo ningun archivo de los feed sources actuales.");
-
-        if (!logFile.exists() || !son_iguales)
-        {
-            escribirRegistro(logName);
-            System.out.println("Desde el SplashActivity se creo el archivo que lleva el registro de cuales feed sources han sido aceptados y cuales no.");
-        }
-        else
-            System.out.println("No se creo ningun archivo que lleva el registro de cuales feed sources han sido aceptados y cuales no.");
-
-        lista_sources2 = leerRegistros(logName);
-
-        /*if (lista_sources != null)
-        {
-            for (int i = 0; i < lista_sources2.size(); i++)
-            {
-                Log.d("Esta funcionando:", "" + lista_sources.get(i).getURL());
-                Log.d("Esta funcionando:", "" + lista_sources.get(i).getNombre());
-                Log.d("Esta funcionando:", "" + lista_sources.get(i).isAceptado());
-            }
-        }*/
 
 		ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (conMgr.getActiveNetworkInfo() == null) {
@@ -237,8 +167,8 @@ public class SplashActivity extends Activity {
 
             for (int i = 0; i < lista_sources.size(); i++)
             {
-                if (lista_sources2.size() > 0) {
-                    FeedSource s = lista_sources2.get(i);
+                if (lista_sources.size() > 0) {
+                    FeedSource s = lista_sources.get(i);
                     if (s.isAceptado())
                         feed = myParser.parseXml(s.getURL(), s.getNombre());
                 }
@@ -390,8 +320,6 @@ public class SplashActivity extends Activity {
         sour.setIdioma(partes[3]);
         sour.setURLPagina(partes[4]);
 
-       // System.out.println("Verdadero/Falso:" + partes[2]);
-
         if (linea.contains("trueverdadero"))
             sour.setAceptado(true);
 
@@ -449,7 +377,7 @@ public class SplashActivity extends Activity {
             boolean esSeguro = false;
 
             // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(url, JSONParser.GET);
+            String jsonStr = sh.makeServiceCall(url2, JSONParser.GET);
 
             if (jsonStr != null) {
                 try {

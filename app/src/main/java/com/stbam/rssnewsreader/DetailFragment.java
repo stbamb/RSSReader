@@ -64,7 +64,7 @@ public class DetailFragment extends Fragment {
         if (fPos == fFeed.getItemCount() - 2)
             fPos2 += 2;
         title.setText(fFeed.getItem(fPos).getTitle());
-        System.out.println("Desde DetailFragment esta es la posicion del item: " + fPos2);
+        //System.out.println("Desde DetailFragment esta es la posicion del item: " + fPos2);
         //System.out.println("Largo actual del feed: " + fFeed.getItemCount());
 
        // System.out.println(fFeed.getItem(fPos).getDescription());
