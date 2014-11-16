@@ -31,22 +31,28 @@
                 android:title="Agregar nuevas fuentes"/>
 
             <item
-                android:id="@+id/sort_option"
-                android:icon="@drawable/ic_action_sort_by_size"
+                android:id="@+id/youtube_option"
+                android:icon="@drawable/ic_action_play_over_video"
                 android:showAsAction="always|withText"
-                android:title="Ordenar alfabéticamente"/>
+                android:title="Ver videos de Youtube"/>
 
             <item
                 android:id="@+id/location_option"
                 android:icon="@drawable/ic_action_place"
                 android:showAsAction="always|withText"
-                android:title="Obtener mi localización"/>
+                android:title="Obtener mi ubicación"/>
 
             <item
-                android:id="@+id/youtube_option"
-                android:icon="@drawable/ic_action_play_over_video"
+                android:id="@+id/sort_option"
+                android:icon="@drawable/ic_action_sort_by_size"
                 android:showAsAction="always|withText"
-                android:title="Ver videos de Youtube"/>
+                android:title="Ordenar contenido"/>
+
+            <item
+                android:id="@+id/filter_option"
+                android:icon="@drawable/ic_action_location_found"
+                android:showAsAction="always|withText"
+                android:title="Filtrar contenido"/>
 
             <item
                 android:id="@+id/account_option"

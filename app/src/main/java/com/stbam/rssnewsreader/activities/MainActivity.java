@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -41,6 +42,9 @@ public class MainActivity extends Activity {
     public static ArrayList<FeedSource> feedLink;
     public static boolean empiezaVacio;
     static MainActivity activityA;
+    public static RSSFeed feed_fuentes2 = new RSSFeed();
+    public boolean terminado = false;
+    public static String miPais = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,6 @@ public class MainActivity extends Activity {
         // Initialize the variables:
         lv = (ListView) findViewById(R.id.listView);
         lv.setVerticalFadingEdgeEnabled(true);
-
-
 
         // Set an Adapter to the ListView
         adapter = new CustomListAdapter(this);
@@ -94,7 +96,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this).inflate(R.menu.activity_main, menu);
+        new MenuInflater(this).inflate(R.menu.main, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search_option).getActionView();
@@ -140,6 +142,23 @@ public class MainActivity extends Activity {
                 startLocationActivity();
                 return true;
 
+            case R.id.filter_option:
+                LocationActivity a = new LocationActivity();
+                if (!a.pais_obtenido)
+                {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Aún no hemos determinado tu ubicación", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else
+                {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Tu país es: " + a.pais, Toast.LENGTH_SHORT);
+                    toast.show();
+                    miPais = a.pais;
+                    if (feedLink != null && feedLink.size() > 0)
+                        filterContentByCountry();
+                }
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -168,8 +187,9 @@ public class MainActivity extends Activity {
         //this.finish();
     }
 
-    public void refreshList(final MenuItem item) {
-
+    public void refreshList(final MenuItem item)
+    {
+        terminado = false;
         feedLink = new AddActivity().feedLink;
 
         if (feedLink == null)
@@ -251,7 +271,9 @@ public class MainActivity extends Activity {
         public int getCount() {
 
             // Set the total list item count
-            return feed.getItemCount();
+            if (feed != null)
+                return feed.getItemCount();
+            return 0;
         }
 
         @Override
@@ -288,4 +310,69 @@ public class MainActivity extends Activity {
 
     }
 
+
+    public void filterContentByCountry()
+    {
+        feed = null;
+        adapter = new CustomListAdapter(this);
+        lv.setAdapter(adapter);
+        int abc = 0;
+        AsyncFilter a = new AsyncFilter();
+        a.execute();
+
+        while (!terminado)
+            abc++;
+
+        terminado = false;
+        adapter = new CustomListAdapter(this);
+        lv.setAdapter(adapter);
+    }
+
+    // clase asincrona que cargar el contenido desde los urls dados
+    private class AsyncFilter extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+            // Obtain feed
+            DOMParser myParser = new DOMParser();
+
+            //esto sirve para que recolecte todos los links
+            for (int i = 0; i < feedLink.size(); i++)
+            {
+                if (miPais.equals("Costa Rica"))
+                {
+                    FeedSource s = feedLink.get(i);
+                    if (s.isAceptado() /*&& s.getCategoria().toLowerCase().equals("noticias")*/ && (s.getIdioma().toLowerCase().equals("espaã±ol") || s.getIdioma().toLowerCase().equals("español") || s.getIdioma().toLowerCase().equals("spanish")))
+                        feed = myParser.parseXml(s.getURL(), s.getNombre());
+                }
+                else if (miPais.equals("USA") || miPais.equals("United States") || miPais.equals("Estados Unidos") || miPais.equals("US"))
+                {
+                    FeedSource s = feedLink.get(i);
+                    //System.out.println("Idioma: " + s.getIdioma());
+                    //System.out.println("URL: " + s.getURL());
+                    if (s.isAceptado() /*&& s.getCategoria().toLowerCase().equals("noticias")*/ && (s.getIdioma().toLowerCase().equals("english") || s.getCategoria().toLowerCase().equals("ingles"))|| s.getCategoria().toLowerCase().equals("inglés"))
+                        feed = myParser.parseXml(s.getURL(), s.getNombre());
+
+                }
+                else if (miPais.equals("Germany") || miPais.equals("Alemania") || miPais.equals("Deutschland"))
+                {
+                    FeedSource s = feedLink.get(i);
+                    //System.out.println("Idioma: " + s.getIdioma());
+                    //System.out.println("URL: " + s.getURL());
+                    if (s.isAceptado() /*&& s.getCategoria().toLowerCase().equals("noticias")*/ && (s.getIdioma().toLowerCase().equals("german") || s.getCategoria().toLowerCase().equals("aleman"))|| s.getCategoria().toLowerCase().equals("alemán"))
+                        feed = myParser.parseXml(s.getURL(), s.getNombre());
+                }
+            }
+            terminado = true;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            super.onPostExecute(result);
+            terminado = true;
+        }
+    }
 }

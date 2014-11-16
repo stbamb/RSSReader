@@ -43,7 +43,7 @@ public class DOMParser {
 
         if (xml.equals(theverge) || xml.equals(theverge_burner) || xml.equals(polygon) || xml.equals(polygon_burner))
             leerPolygonYTheVerge(url, nombre);
-        else if (nombre.equals("LifeHacker") || nombre.equals("PhoneArena"))
+        else if (nombre.equals("LifeHacker") || nombre.equals("PhoneArena") || nombre.equals("US Google News") || nombre.equals("ABC News"))
             leerOtrosFeed(url, nombre);
         else
             leerTipoRaro(url, nombre);
@@ -112,7 +112,7 @@ public class DOMParser {
                             org.jsoup.nodes.Document docHtml = Jsoup.parse(html);
                             Elements imgEle = docHtml.select("img");
 
-                            if (nombre.equals("PhoneArena"))
+                            if (nombre.equals("PhoneArena") || nombre.equals("US Google News"))
                                 _item.setImage("http:" + imgEle.attr("src"));
                             else
                                 _item.setImage(imgEle.attr("src"));
@@ -202,6 +202,7 @@ public class DOMParser {
 
     private void leerTipoRaro(URL url, String nombre)
     {
+        //System.out.println("Parseando el feed source de nombre: " + nombre);
         try {
             // Create required instances
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

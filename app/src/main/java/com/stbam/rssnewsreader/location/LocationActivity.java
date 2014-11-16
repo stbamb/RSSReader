@@ -82,7 +82,10 @@ public class LocationActivity extends FragmentActivity implements
     private ProgressBar mActivityIndicator;
     private TextView mConnectionState;
     private TextView mConnectionStatus;
-    public static String pais;
+
+    // estas variables son para filtrar el contenido luego
+    public static String pais = "";
+    public static boolean pais_obtenido = false;
 
     // Handle to SharedPreferences for this app
     SharedPreferences mPrefs;
@@ -106,9 +109,9 @@ public class LocationActivity extends FragmentActivity implements
         setContentView(R.layout.activity_location);
 
         // Get handles to the UI view objects
-        mLatLng = (TextView) findViewById(R.id.lat_lng);
-        mAddress = (TextView) findViewById(R.id.address);
-        mActivityIndicator = (ProgressBar) findViewById(R.id.address_progress);
+        //mLatLng = (TextView) findViewById(R.id.lat_lng);
+        mAddress = (TextView) findViewById(R.id.label_address);
+        //mActivityIndicator = (ProgressBar) findViewById(R.id.address_progress);
 
         // Create a new global location parameters object
         mLocationRequest = LocationRequest.create();
@@ -155,7 +158,7 @@ public class LocationActivity extends FragmentActivity implements
 
         // If the client is connected
         if (mLocationClient.isConnected()) {
-            stopPeriodicUpdates();
+            //stopPeriodicUpdates();
         }
 
         // After disconnect() is called, the client is considered "dead".
@@ -323,7 +326,7 @@ public class LocationActivity extends FragmentActivity implements
             Location currentLocation = mLocationClient.getLastLocation();
 
             // Display the current location in the UI
-            mLatLng.setText(LocationUtils.getLatLng(this, currentLocation));
+//            mLatLng.setText(LocationUtils.getLatLng(this, currentLocation));
         }
     }
 
@@ -351,7 +354,7 @@ public class LocationActivity extends FragmentActivity implements
             Location currentLocation = mLocationClient.getLastLocation();
 
             // Turn the indefinite activity indicator on
-            mActivityIndicator.setVisibility(View.VISIBLE);
+//            mActivityIndicator.setVisibility(View.VISIBLE);
 
             // Start the background task
             (new LocationActivity.GetAddressTask(this)).execute(currentLocation);
@@ -368,7 +371,7 @@ public class LocationActivity extends FragmentActivity implements
         mUpdatesRequested = true;
 
         if (servicesConnected()) {
-            startPeriodicUpdates();
+            //startPeriodicUpdates();
         }
     }
 
@@ -383,7 +386,7 @@ public class LocationActivity extends FragmentActivity implements
         mUpdatesRequested = false;
 
         if (servicesConnected()) {
-            stopPeriodicUpdates();
+            //stopPeriodicUpdates();
         }
     }
 
@@ -470,7 +473,7 @@ public class LocationActivity extends FragmentActivity implements
     private void startPeriodicUpdates() {
 
         mLocationClient.requestLocationUpdates(mLocationRequest, this);
-        mConnectionState.setText(R.string.location_requested);
+        //mConnectionState.setText(R.string.location_requested);
     }
 
     /**
@@ -479,7 +482,7 @@ public class LocationActivity extends FragmentActivity implements
      */
     private void stopPeriodicUpdates() {
         mLocationClient.removeLocationUpdates(this);
-        mConnectionState.setText(R.string.location_updates_stopped);
+//        mConnectionState.setText(R.string.location_updates_stopped);
     }
 
     /**
@@ -599,10 +602,12 @@ public class LocationActivity extends FragmentActivity implements
         protected void onPostExecute(String address) {
 
             // Turn off the progress bar
-            mActivityIndicator.setVisibility(View.GONE);
+//            mActivityIndicator.setVisibility(View.GONE);
 
             // Set the address in the UI
-            mAddress.setText(address);
+            mAddress.setText("País: " + address.substring(2));
+            pais = address.substring(2);
+            pais_obtenido = true;
         }
     }
 
