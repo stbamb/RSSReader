@@ -12,10 +12,10 @@
         android:actionViewClass="android.widget.SearchView" />
 
     <item
-        android:id="@+id/refresh_option"
-        android:icon="@drawable/ic_action_refresh"
+        android:id="@+id/add_option"
+        android:icon="@drawable/ic_action_new"
         android:showAsAction="ifRoom"
-        android:title="Refresh"/>
+        android:title="Add"/>
 
     <item
         android:id="@+id/settings"
@@ -24,11 +24,6 @@
         android:title="Settings"
         android:showAsAction="always">
         <menu>
-            <item
-                android:id="@+id/add_option"
-                android:icon="@drawable/ic_action_new"
-                android:showAsAction="always|withText"
-                android:title="Agregar nuevas fuentes"/>
 
             <item
                 android:id="@+id/youtube_option"
@@ -53,6 +48,12 @@
                 android:icon="@drawable/ic_action_location_found"
                 android:showAsAction="always|withText"
                 android:title="Filtrar contenido"/>
+
+            <item
+                android:id="@+id/refresh_option"
+                android:icon="@drawable/ic_action_refresh"
+                android:showAsAction="always|withText"
+                android:title="Actualizar"/>
 
             <item
                 android:id="@+id/account_option"

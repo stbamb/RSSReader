@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -41,7 +43,6 @@ public class MainActivity extends Activity {
     CustomListAdapter adapter;
     public static ArrayList<FeedSource> feedLink;
     public static boolean empiezaVacio;
-    static MainActivity activityA;
     public static RSSFeed feed_fuentes2 = new RSSFeed();
     public boolean terminado = false;
     public static String miPais = "";
@@ -51,8 +52,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-        activityA = this; // hace que la actividad se iguale a this para luego poder terminarla
 
         // set the feed link for refresh
         feedLink = new SplashActivity().lista_sources;
@@ -133,7 +132,7 @@ public class MainActivity extends Activity {
                     Collections.sort(feed.getLista());
                     lv.setAdapter(adapter);
                 } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "No hay elementos que ordenar", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "No hay elementos por ordenar", Toast.LENGTH_SHORT);
                     toast.show();
                 }
                 return true;
@@ -143,20 +142,7 @@ public class MainActivity extends Activity {
                 return true;
 
             case R.id.filter_option:
-                LocationActivity a = new LocationActivity();
-                if (!a.pais_obtenido)
-                {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Aún no hemos determinado tu ubicación", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                else
-                {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Tu país es: " + a.pais, Toast.LENGTH_SHORT);
-                    toast.show();
-                    miPais = a.pais;
-                    if (feedLink != null && feedLink.size() > 0)
-                        filterContentByCountry();
-                }
+                filterContentByCountry();
                 return true;
 
         }
@@ -189,6 +175,8 @@ public class MainActivity extends Activity {
 
     public void refreshList(final MenuItem item)
     {
+        // para que la proxima vez que se filtre contenido
+        // por ubicacion, la funcion siga haciendo lo que tiene que hacer
         terminado = false;
         feedLink = new AddActivity().feedLink;
 
@@ -202,43 +190,29 @@ public class MainActivity extends Activity {
                 DOMParser tmpDOMParser = new DOMParser();
                 feed = null;
                 int itemes_feed = feedLink.size();
-                boolean todoNulo = true;
 
                 for (int i = 0; i < itemes_feed; i++) {
                     FeedSource s = feedLink.get(i);
-                    //System.out.println("Nombre: " + s.getNombre() + " URL: " + s.getURL() + " Aceptado: " + s.isAceptado());
-                    if (s.isAceptado()) {
+                    if (s.isAceptado())
                         feed = tmpDOMParser.parseXml(s.getURL(), s.getNombre());
-                        todoNulo = false;
-                    }
                 }
-
-                if (todoNulo)
-                    feed = null;
 
                 MainActivity.this.runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (feed != null && feed.getItemCount() > 0) {
-
+                        if (feed != null && feed.getItemCount() > 0)
+                        {
                             if (empiezaVacio)
                                 lv.setAdapter(adapter);
 
-                            else {
+                            else
+                            {
                                 lv.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                             }
-                            item.setEnabled(false);
-                            new CountDownTimer(3000, 1000) {
-                                public void onTick(long millisUntilFinished) {
-                                }
-
-                                public void onFinish() {
-                                    item.setEnabled(true);
-                                }
-                            }.start();
-                        } else if (feed == null)
+                        }
+                        else if (feed == null)
                             lv.setAdapter(null);
                     }
                 });
@@ -313,12 +287,32 @@ public class MainActivity extends Activity {
 
     public void filterContentByCountry()
     {
+        LocationActivity a = new LocationActivity();
+        boolean continuar = false;
+        if (!a.pais_obtenido)
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), "Aún no hemos determinado tu ubicación", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        else
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), "Tu país es: " + a.pais, Toast.LENGTH_SHORT);
+            toast.show();
+            miPais = a.pais;
+            if (feedLink != null && feedLink.size() > 0)
+                continuar = true;
+        }
+
+        if (!continuar)
+            return;
+
         feed = null;
         adapter = new CustomListAdapter(this);
         lv.setAdapter(adapter);
         int abc = 0;
-        AsyncFilter a = new AsyncFilter();
-        a.execute();
+        AsyncFilter b = new AsyncFilter();
+        b.execute();
 
         while (!terminado)
             abc++;

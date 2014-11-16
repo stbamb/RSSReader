@@ -29,7 +29,7 @@ import org.json.JSONObject;
 public class SplashActivity extends Activity {
 
     public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json"; // para pruebas
-    public static String url2 = "http://proyecto2.cloudapp.net:8080/feeds"; // para progra
+    public static String url2 = "http://proyecto2.cloudapp.net:3000/feeds"; // para progra
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources2 = new ArrayList<FeedSource>();
     public static ArrayList<FeedSource> lista_sources_viejos = new ArrayList<FeedSource>();
@@ -80,31 +80,26 @@ public class SplashActivity extends Activity {
 		if (conMgr.getActiveNetworkInfo() == null) {
 
 			// no hay conexion a internet
-			if (!feedFile.exists()) {
 
-				// No connectivity & Feed file doesn't exist: Show alert to exit
-				// & check for connectivity
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(
-						"Unable to reach server, \nPlease check your connectivity.")
-						.setTitle("RSS Reader")
-						.setCancelable(false)
-						.setPositiveButton("Exit",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int id) {
-										finish();
-									}
-								});
+            // No connectivity & Feed file doesn't exist: Show alert to exit
+            // & check for connectivity
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(
+                    "Unable to reach server, \nPlease check your connectivity.")
+                    .setTitle("RSS Reader")
+                    .setCancelable(false)
+                    .setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                        int id) {
+                                    finish();
+                                }
+                            });
 
-				AlertDialog alert = builder.create();
-				alert.show();
-			} else {
+            AlertDialog alert = builder.create();
+            alert.show();
 
-				feed = ReadFeed(fileName);
-				startListActivity(feed);
-			}
 
 		} else {
 
@@ -176,10 +171,6 @@ public class SplashActivity extends Activity {
                 }
             }
 
-			if (feed != null && feed.getItemCount() > 0)
-            {
-                WriteFeed(feed);
-            }
 			return null;
 
 		}
@@ -191,32 +182,6 @@ public class SplashActivity extends Activity {
 			startListActivity(feed);
 		}
 
-	}
-
-	// escribe los sources en un archivo de bitacora
-	private void WriteFeed(RSSFeed data) {
-
-		FileOutputStream fOut = null;
-		ObjectOutputStream osw;
-
-		try {
-			fOut = openFileOutput(fileName, MODE_PRIVATE);
-			osw = new ObjectOutputStream(fOut);
-			osw.writeObject(data);
-			osw.flush();
-		}
-
-		catch (Exception e) {
-			//e.printStackTrace();
-		}
-
-		finally {
-			try {
-				fOut.close();
-			} catch (IOException e) {
-				//e.printStackTrace();
-			}
-		}
 	}
 
     // otro metodo para escribir bitacoras
@@ -330,40 +295,6 @@ public class SplashActivity extends Activity {
 
         return sour;
     }
-
-	// Metodo para leer archivo de bitacora
-	private RSSFeed ReadFeed(String fName) {
-
-		FileInputStream fIn = null;
-		ObjectInputStream isr = null;
-
-		RSSFeed _feed = null;
-		File feedFile = getBaseContext().getFileStreamPath(fileName);
-		if (!feedFile.exists())
-			return null;
-
-		try {
-			fIn = openFileInput(fName);
-			isr = new ObjectInputStream(fIn);
-
-			_feed = (RSSFeed) isr.readObject();
-		}
-
-		catch (Exception e) {
-			//e.printStackTrace();
-		}
-
-		finally {
-			try {
-				fIn.close();
-			} catch (IOException e) {
-				//e.printStackTrace();
-			}
-		}
-
-		return _feed;
-
-	}
 
     private class getAllSources extends AsyncTask<Void, Void, Void> {
 

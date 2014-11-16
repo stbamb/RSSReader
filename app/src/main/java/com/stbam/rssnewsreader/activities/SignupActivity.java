@@ -98,10 +98,10 @@ public class SignupActivity extends Activity {
 
         System.out.println("Desde SignupActivity, esta fue la respuesta del servidor: " + respuesta_servidor);
 
-        /*if (respuesta_servidor.equals("user not found"))
+        if (respuesta_servidor.equals("user already exists"))
         {
 
-            AlertDialog alertDialog1 = new AlertDialog.Builder(LoginActivity.this).create();
+            AlertDialog alertDialog1 = new AlertDialog.Builder(SignupActivity.this).create();
 
             alertDialog1.setTitle("RSS Reader");
             alertDialog1.setMessage("Usted ya se encuentra registrado.");
@@ -109,6 +109,7 @@ public class SignupActivity extends Activity {
 
                 public void onClick(DialogInterface dialog, int which) {
                     startInitialActivity();
+                    finish();
                 }
             });
 
@@ -116,10 +117,9 @@ public class SignupActivity extends Activity {
 
         }
 
-        else {
-
-
-            AlertDialog alertDialog1 = new AlertDialog.Builder(LoginActivity.this).create();
+        else
+        {
+            AlertDialog alertDialog1 = new AlertDialog.Builder(SignupActivity.this).create();
 
             alertDialog1.setTitle("RSS Reader");
             alertDialog1.setMessage("Usuario registrado exitosamente");
@@ -131,7 +131,7 @@ public class SignupActivity extends Activity {
             });
 
             alertDialog1.show();
-        }*/
+        }
     }
 
     public void startInitialActivity() {
@@ -227,7 +227,7 @@ public class SignupActivity extends Activity {
 
             try {
                 DefaultHttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppostreq = new HttpPost("http://proyecto2.cloudapp.net:8080/signup");
+                HttpPost httppostreq = new HttpPost("http://proyecto2.cloudapp.net:3000/signin");
 
                 StringEntity se = new StringEntity(jsonObj.toString());
 

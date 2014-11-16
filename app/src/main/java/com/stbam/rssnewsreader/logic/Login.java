@@ -35,7 +35,7 @@ public class Login extends AsyncTask<Void, Void, Void> {
         try {
 
             DefaultHttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppostreq = new HttpPost("http://proyecto2.cloudapp.net:8080/login");
+            HttpPost httppostreq = new HttpPost("http://proyecto2.cloudapp.net:3000/login");
 
             StringEntity se = new StringEntity(jsonObj.toString());
 

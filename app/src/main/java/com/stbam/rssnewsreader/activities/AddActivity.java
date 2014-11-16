@@ -109,16 +109,12 @@ public class AddActivity extends Activity
                     text = "Se ha desubscrito a " + feedLink.get(pos).getNombre(); // para mostrar via Toast a cual feed source le quieto la subscripcion
                     checked_item.setVisibility(View.INVISIBLE);
                     feedLink.get(pos).setAceptado(false);
-                    escribirRegistro("RSSReaderLog.stb");
-                    escribirRegistro("RSSReaderFeed.stb");
                 }
                 else
                 {
                     text = "Se ha subscrito a " + feedLink.get(pos).getNombre(); // para mostrar via Toast a cual feed source le quieto la subscripcion
                     checked_item.setVisibility(View.VISIBLE);
                     feedLink.get(pos).setAceptado(true);
-                    escribirRegistro("RSSReaderLog.stb");
-                    escribirRegistro("RSSReaderFeed.stb");
                 }
 
                 Toast toast = Toast.makeText(context, text, duration);
@@ -276,54 +272,6 @@ public class AddActivity extends Activity
             return true;
         }
 
-    }
-
-    public void escribirRegistro(String file_name) {
-
-        FileOutputStream fOut = null;
-        ObjectOutputStream osw;
-
-        try {
-            fOut = openFileOutput(file_name, MODE_PRIVATE);
-            osw = new ObjectOutputStream(fOut);
-
-            for (int i = 0; i < feedLink.size(); i++) {
-                FeedSource s = feedLink.get(i);
-                osw.write(s.getURL().getBytes());
-                osw.write(";".getBytes());
-                osw.write(s.getNombre().getBytes());
-                osw.write(";".getBytes());
-                osw.write(s.getCategoria().getBytes());
-                osw.write(";".getBytes());
-                osw.write(s.getIdioma().getBytes());
-                osw.write(";".getBytes());
-                osw.write(s.getURLPagina().getBytes());
-                osw.write(";".getBytes());
-                if (s.isAceptado())
-                    osw.write("trueverdadero".getBytes());
-                else
-                    osw.write("falsefalso".getBytes());
-
-                osw.write(";".getBytes());
-                osw.write("\n".getBytes());
-            }
-
-            osw.flush();
-        }
-
-        catch (Exception e) {
-            //e.printStackTrace();
-        }
-
-        finally {
-            try {
-                if (fOut != null) {
-                    fOut.close();
-                }
-            } catch (IOException e) {
-                //e.printStackTrace();
-            }
-        }
     }
 
     // funcion que retorna todas las categorias existentes

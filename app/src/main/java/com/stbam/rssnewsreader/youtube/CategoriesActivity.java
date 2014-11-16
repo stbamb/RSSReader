@@ -29,7 +29,7 @@ public class CategoriesActivity extends ListActivity {
     // el tipo de video que quiere ver
     private String listItems[];
     private boolean sinterminar = true;
-    private String url_videos = "http://proyecto2.cloudapp.net:8080/videos";
+    private String url_videos = "http://proyecto2.cloudapp.net:3000/videos";
     private static final String TAG_SOURCES = "source";
     private static final String TAG_URL = "video_id";
     private static final String TAG_CATEGORIA = "categoria";
