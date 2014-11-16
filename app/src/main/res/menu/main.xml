@@ -38,6 +38,12 @@
                 android:title="Obtener mi ubicación"/>
 
             <item
+                android:id="@+id/refresh_option"
+                android:icon="@drawable/ic_action_refresh"
+                android:showAsAction="always|withText"
+                android:title="Actualizar contenido"/>
+
+            <item
                 android:id="@+id/sort_option"
                 android:icon="@drawable/ic_action_sort_by_size"
                 android:showAsAction="always|withText"
@@ -48,12 +54,6 @@
                 android:icon="@drawable/ic_action_location_found"
                 android:showAsAction="always|withText"
                 android:title="Filtrar contenido"/>
-
-            <item
-                android:id="@+id/refresh_option"
-                android:icon="@drawable/ic_action_refresh"
-                android:showAsAction="always|withText"
-                android:title="Actualizar"/>
 
             <item
                 android:id="@+id/account_option"
