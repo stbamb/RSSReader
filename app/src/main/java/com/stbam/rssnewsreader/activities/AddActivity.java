@@ -3,6 +3,8 @@ package com.stbam.rssnewsreader.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,9 +19,18 @@ import android.widget.Toast;
 import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.parser.FeedSource;
 import com.stbam.rssnewsreader.widgets.AnimatedExpandableListView;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +41,12 @@ public class AddActivity extends Activity
     public static ArrayList<FeedSource> feedLink;
     SplashActivity s = new SplashActivity();
     private static ArrayList<String> lista_categorias;
+
+    // variables usadas para enviar subscripciones
+    public static String respuesta_servidor_envio_subscripciones = "";
+    public static boolean proceso_subscipcion_enviado = false;
+    public static String id_usuario = "";
+    public static String[] lista_subscripciones = {};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,15 +176,12 @@ public class AddActivity extends Activity
 
             case android.R.id.home:
                 // app icon in action bar clicked; finish activity to go home
+                enviarSubscripciones();
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * Adapter for our list of {@link GroupItem}s.
-     */
 
     // este es el adapatador para La lista animada expandible
     // sirve para conectar los datos con la UI
@@ -332,14 +346,103 @@ public class AddActivity extends Activity
     public int getPosicion(String nombre_source)
     {
         int pos = 0;
-
         for (int i = 0; i < feedLink.size(); i++)
-        {
             if (feedLink.get(i).getNombre().equals(nombre_source)) {
                 pos = i;
                 break;
             }
-        }
         return pos;
+    }
+
+    public void enviarSubscripciones()
+    {
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("ID");
+        System.out.println("Desde AddActivity, este es el ID del usuario: " + id);
+        id_usuario = id;
+
+        int abc = 0;
+
+        Subscribe s = new Subscribe();
+        s.execute();
+
+        while (!proceso_subscipcion_enviado)
+            abc++;
+
+    }
+
+    public class Subscribe extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+            try {
+
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppostreq = new HttpPost("http://proyecto2.cloudapp.net:3000/subscribe");
+
+                JSONObject jsonObj = new JSONObject();
+                JSONArray subs = new JSONArray();
+                try
+                {
+                    jsonObj.put("id", id_usuario);
+
+                    int cont = 0;
+                    int cont2 = 0;
+
+                    for (int i = 0; i < feedLink.size(); i++)
+                        if (feedLink.get(i).isAceptado())
+                            cont++;
+
+                    lista_subscripciones = new String[cont];
+
+                    for (int i = 0; i < feedLink.size(); i++)
+                        if (feedLink.get(i).isAceptado()) {
+                            lista_subscripciones[cont2] = feedLink.get(i).getNombre();
+                            cont2++;
+                        }
+
+                    for (int i = 0; i < lista_subscripciones.length; i++)
+                        subs.put(lista_subscripciones[i]);
+
+                    jsonObj.put("subscriptions", subs);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                StringEntity se = new StringEntity(jsonObj.toString());
+
+                se.setContentType("application/json;charset=UTF-8");
+                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
+                httppostreq.setEntity(se);
+
+                HttpResponse httpresponse = httpclient.execute(httppostreq);
+
+                String responseText = null;
+                try {
+                    responseText = EntityUtils.toString(httpresponse.getEntity());
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                respuesta_servidor_envio_subscripciones = responseText;
+
+            }catch (Exception ex) {
+                System.out.println(ex.toString());
+                // handle exception here
+            } finally {
+                //httpClient.getConnectionManager().shutdown();
+            }
+
+            proceso_subscipcion_enviado = true;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            proceso_subscipcion_enviado = true;
+        }
     }
 }

@@ -56,6 +56,12 @@
                 android:title="Filtrar contenido"/>
 
             <item
+                android:id="@+id/recommendations_option"
+                android:icon="@drawable/ic_action_good"
+                android:showAsAction="always|withText"
+                android:title="Recomendaciones"/>
+
+            <item
                 android:id="@+id/account_option"
                 android:icon="@drawable/ic_action_person"
                 android:showAsAction="always|withText"

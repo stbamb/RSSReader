@@ -23,29 +23,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 // esta es la clase que abre la aplicacion cuando hay contenido que cargar
-// se utiliza basicamente para cargar el contenido y para tener todo listo
+// se utiliza basicamente para cargar el contenido y para tener todas las cosas listas
 // para que cuando se llegue a la actividad principal para que las noticias esten listas
+
 // Nos basamos en la idea del tutorial de http://techiedreams.com/android-simple-rss-reader/
 public class SplashActivity extends Activity {
 
     public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json"; // para pruebas
     public static String url2 = "http://proyecto2.cloudapp.net:3000/feeds"; // para progra
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
-    public static ArrayList<FeedSource> lista_sources2 = new ArrayList<FeedSource>();
-    public static ArrayList<FeedSource> lista_sources_viejos = new ArrayList<FeedSource>();
-    public static ArrayList<FeedSource> lista_sources_viejos2 = new ArrayList<FeedSource>();
 	RSSFeed feed;
-	public static String fileName;
-    public static String logName;
-    public static String sourceName;
     JSONArray fuentessr = null;
     private static final String TAG_SOURCES = "source";
+    private static final String TAG_SUBSCRIPTIONS = "subscriptions";
     private static final String TAG_URL = "url";
     private static final String TAG_URL_PAGINA = "urlpagina";
     private static final String TAG_NOMBRE = "nombre";
     private static final String TAG_CATEGORIA = "categoria";
     private static final String TAG_IDIOMA = "idioma";
-    public static boolean sinterminar = true;
+    public static boolean recoleccion_sources_sin_finalizar = true;
+    public static String id_usuario = "";
+    public static String[] lista_subscripciones = {};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,32 +51,34 @@ public class SplashActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
 
-		fileName = "TDRSSFeed.td";
-        logName = "RSSReaderLog.stb";
-        sourceName = "RSSReaderFeed.stb";
-
-        File feedFile = getBaseContext().getFileStreamPath(fileName);
-        File logFile = getBaseContext().getFileStreamPath(logName);
-        File sourceFile = getBaseContext().getFileStreamPath(sourceName);
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("ID");
+        id_usuario = id;
 
         // si por algun motivo se llega
         // a eliminar un source del JSON
         // entonces descomentar las siguientes dos lineas
-
-        //escribirRegistro(logName);
-        //leerRegistros(logName);
-
         // llamada a la funcion que recolecta los JSON y los convierte en instancias
         // de la clase FeedSource y los mete en lista_sources
-        getAllSources a = new getAllSources();
+        ObtenerFuentes a = new ObtenerFuentes();
         a.execute();
         int abc = 0;
-        while (sinterminar)
+        while (recoleccion_sources_sin_finalizar)
             abc++;
 
-		ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		if (conMgr.getActiveNetworkInfo() == null) {
+        for (int i = 0; i < lista_subscripciones.length; i++)
+            System.out.println("Fuentes a las que el usuario " + id_usuario + " esta subscrito: " + lista_subscripciones[i].toString());
 
+        for (int i = 0; i < lista_sources.size(); i++) {
+            for (int j = 0; j < lista_subscripciones.length; j++) {
+                if (lista_sources.get(i).getNombre().toString().toLowerCase().equals(lista_subscripciones[j].toLowerCase()))
+                    lista_sources.get(i).setAceptado(true);
+            }
+        }
+
+		ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (conMgr.getActiveNetworkInfo() == null)
+        {
 			// no hay conexion a internet
 
             // No connectivity & Feed file doesn't exist: Show alert to exit
@@ -92,58 +92,30 @@ public class SplashActivity extends Activity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog,
-                                        int id) {
+                                                    int id) {
                                     finish();
                                 }
                             });
 
             AlertDialog alert = builder.create();
             alert.show();
-
-
-		} else {
-
+		} else
+        {
 			// se empiezan a parsear los sources
-			new AsyncLoadXMLFeed().execute();
-
+            new AsyncLoadXMLFeed().execute();
 		}
-
 	}
 
-    public boolean cambiaronFeedSources()
-    {
-        boolean bandera = false;
-
-        if (lista_sources.size() == lista_sources_viejos.size() && lista_sources.size() != 0)
-            for (int i = 0; i < lista_sources.size(); i++)
-            {
-                /*System.out.println(lista_sources.get(i).getNombre().equals(lista_sources_viejos.get(i).getNombre()));
-                System.out.println("Nombre lista_sources[" + i + "]: " + lista_sources.get(i).getNombre());
-                System.out.println("Nombre lista_sources_viejos[" + i + "]: " + lista_sources_viejos.get(i).getNombre());
-                System.out.println(lista_sources.get(i).getURL().equals(lista_sources_viejos.get(i).getURL()));
-                System.out.println(lista_sources.get(i).getCategoria().equals(lista_sources_viejos.get(i).getCategoria()));
-                System.out.println(lista_sources.get(i).getIdioma().equals(lista_sources_viejos.get(i).getIdioma()));
-                //System.out.println(lista_sources.get(i).getImg().equals(lista_sources_viejos.get(i).getImg()));
-                System.out.println(lista_sources.get(i).getURLPagina().equals(lista_sources_viejos.get(i).getURLPagina()));*/
-
-                if (lista_sources.get(i).getNombre().equals(lista_sources_viejos.get(i).getNombre()) && lista_sources.get(i).getURL().equals(lista_sources_viejos.get(i).getURL())
-                        && lista_sources.get(i).getCategoria().equals(lista_sources_viejos.get(i).getCategoria()) && lista_sources.get(i).getIdioma().equals(lista_sources_viejos.get(i).getIdioma())
-                        && lista_sources.get(i).getURLPagina().equals(lista_sources_viejos.get(i).getURLPagina()))
-                    bandera = true;
-            }
-
-        return bandera;
-    }
-
     // sirve para llamar otro activity, de una forma mas ordenada
-	private void startListActivity(RSSFeed feed) {
-
+	private void startListActivity(RSSFeed feed)
+    {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("feed", feed);
 
-		// launch List activity
+		// para empezar MainActivity
 		Intent intent = new Intent(SplashActivity.this, MainActivity.class);
 		intent.putExtras(bundle);
+        intent.putExtra("ID", id_usuario);
 		startActivity(intent);
 
 		// kill this activity
@@ -161,142 +133,23 @@ public class SplashActivity extends Activity {
 			DOMParser myParser = new DOMParser();
 
             //esto sirve para que recolecte todos los links
-
             for (int i = 0; i < lista_sources.size(); i++)
-            {
                 if (lista_sources.size() > 0) {
                     FeedSource s = lista_sources.get(i);
                     if (s.isAceptado())
                         feed = myParser.parseXml(s.getURL(), s.getNombre());
                 }
-            }
-
 			return null;
-
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-
 			startListActivity(feed);
 		}
-
 	}
 
-    // otro metodo para escribir bitacoras
-    public void escribirRegistro(String file_name) {
-
-        FileOutputStream fOut = null;
-        ObjectOutputStream osw;
-
-        try {
-            fOut = openFileOutput(file_name, MODE_PRIVATE);
-            osw = new ObjectOutputStream(fOut);
-
-            for (int i = 0; i < lista_sources.size(); i++) {
-                FeedSource s = lista_sources.get(i);
-                osw.write(s.getURL().getBytes());
-                osw.write(";".getBytes());
-                osw.write(s.getNombre().getBytes());
-                osw.write(";".getBytes());
-                osw.write(s.getCategoria().getBytes());
-                osw.write(";".getBytes());
-                osw.write(s.getIdioma().getBytes());
-                osw.write(";".getBytes());
-                osw.write(s.getURLPagina().getBytes());
-                osw.write(";".getBytes());
-                if (s.isAceptado())
-                    osw.write("trueverdadero".getBytes());
-                else
-                    osw.write("falsefalso".getBytes());
-
-                osw.write(";".getBytes());
-                osw.write("\n".getBytes());
-            }
-
-            osw.flush();
-        }
-
-        catch (Exception e) {
-            //e.printStackTrace();
-        }
-
-        finally {
-            try {
-                fOut.close();
-            } catch (IOException e) {
-                //e.printStackTrace();
-            }
-        }
-    }
-
-    // si existe entonces lee el registro
-    // para cargar los sources aceptados
-    public ArrayList<FeedSource> leerRegistros(String fName) {
-
-        FileInputStream fIn = null;
-        ObjectInputStream isr = null;
-        ArrayList<FeedSource> s = new ArrayList<FeedSource>();
-        FeedSource sour;
-        String texto = "";
-        File feedFile = getBaseContext().getFileStreamPath(fName);
-        if (!feedFile.exists())
-            return null;
-
-        try {
-            fIn = openFileInput(fName);
-            isr = new ObjectInputStream(fIn);
-
-            //System.out.println("Listasourcessize: " + lista_sources.size());
-            for (int i = 0; i < lista_sources.size(); i++)
-            {
-                texto = isr.readLine();
-                sour = crearListaDinamica(texto);
-                s.add(sour);
-                //System.out.println("Desde SplashActivity, la linea leida es: " + texto);
-            }
-        }
-
-        catch (Exception e) {
-            //e.printStackTrace();
-        }
-
-        finally {
-            try {
-                fIn.close();
-            } catch (IOException e) {
-                //e.printStackTrace();
-            }
-        }
-
-        return s;
-
-    }
-
-    // crea una lista, desde los archivos de bitacora leidos
-    // esta lista sirve para saber si previamente un source habia sido aceptado o no
-    private FeedSource crearListaDinamica(String linea)
-    {
-        FeedSource sour = new FeedSource();
-
-        String[] partes = linea.split(";");
-        sour.setURL(partes[0]);
-        sour.setNombre(partes[1]);
-        sour.setCategoria(partes[2]);
-        sour.setIdioma(partes[3]);
-        sour.setURLPagina(partes[4]);
-
-        if (linea.contains("trueverdadero"))
-            sour.setAceptado(true);
-
-        else
-            sour.setAceptado(false);
-
-        return sour;
-    }
-
-    private class getAllSources extends AsyncTask<Void, Void, Void> {
+    private class ObtenerFuentes extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -307,15 +160,14 @@ public class SplashActivity extends Activity {
         protected Void doInBackground(Void... arg0) {
             // Creating service handler class instance
             JSONParser sh = new JSONParser(new JSONObject());
-            boolean esSeguro = false;
 
             // Making a request to url and getting response
             String jsonStr = sh.makeServiceCall(url2, JSONParser.GET);
 
             if (jsonStr != null) {
-                try {
+                try
+                {
                     JSONObject jsonObj = new JSONObject(jsonStr);
-
                     // Getting JSON Array node
                     fuentessr = jsonObj.getJSONArray(TAG_SOURCES);
 
@@ -334,59 +186,51 @@ public class SplashActivity extends Activity {
 
                         lista_sources.add(s);
                     }
-                } catch (JSONException e) {
+                } catch (JSONException e)
+                {
                     e.printStackTrace();
                 }
-            } else {
-               // Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
-            sinterminar = false;
 
-            lista_sources_viejos2 = leerRegistros(sourceName);
+            String url_subscripciones = "http://proyecto2.cloudapp.net:3000/subscriptions/";
+            url_subscripciones += id_usuario;
+            JSONParser sh2 = new JSONParser(new JSONObject());
 
-            if (lista_sources_viejos2 != null && lista_sources_viejos2.size() != 0)
-                esSeguro = true;
-            if (esSeguro)
+            // Making a request to url and getting response
+            String jsonStr2 = sh2.makeServiceCall(url_subscripciones, JSONParser.GET);
+
+            if (jsonStr2 != null)
             {
-                for (int i = 0; i < lista_sources_viejos2.size(); i++)
+                try
                 {
-                    FeedSource g = lista_sources_viejos2.get(i);
+                    JSONObject jsonObj = new JSONObject(jsonStr2);
 
-                    for (int j = 0; j < lista_sources.size(); j++)
+                    // Getting JSON Array node
+                    fuentessr = jsonObj.getJSONArray(TAG_SUBSCRIPTIONS);
+                    lista_subscripciones = new String[fuentessr.length()];
+                    int cont = 0;
+
+                    for (int i = 0; i < fuentessr.length(); i++)
                     {
-                        FeedSource h = lista_sources.get(i);
-
-                        /*System.out.println("URLs iguales: " + g.getURL().equals(h.getURL()));
-                        System.out.println("URLs Pagina iguales: " + g.getURLPagina().equals(h.getURLPagina()));
-                        System.out.println("Nombres iguales: " + g.getNombre().equals(h.getNombre()));
-                        System.out.println("Categorias iguales: " + g.getCategoria().equals(h.getCategoria()));
-                        System.out.println("Idiomas iguales: " + g.getIdioma().equals(h.getIdioma()));
-                        System.out.println("El source feed de lista_sources_viejos2, de nombre: " + g.getNombre() + " fue aceptado: " + g.isAceptado());*/
-
-                        if (g.getURL().equals(h.getURL()) && g.getURLPagina().equals(h.getURLPagina()) && g.getNombre().equals(h.getNombre())
-                                && g.getCategoria().equals(h.getCategoria()) && g.getIdioma().equals(h.getIdioma()) && g.isAceptado())
-                        {
-                            h.setAceptado(true);
-                            //System.out.println("Fue aceptado el feed source de nombre: " + g.getNombre());
-                        }
+                        lista_subscripciones[cont] = fuentessr.get(i).toString();
+                        cont++;
                     }
 
-
+                } catch (JSONException e)
+                {
+                    e.printStackTrace();
                 }
             }
 
-            //
+            recoleccion_sources_sin_finalizar = false;
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Void result)
+        {
             super.onPostExecute(result);
-            sinterminar = false;
-            // Dismiss the progress dialog
-
+            recoleccion_sources_sin_finalizar = false;
         }
-
     }
-
 }

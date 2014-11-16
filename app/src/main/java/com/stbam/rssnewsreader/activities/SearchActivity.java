@@ -38,10 +38,8 @@ public class SearchActivity extends Activity {
         feed_fuentes2 = new RSSFeed();
         setContentView(R.layout.activity_search);
         query = getIntent().getStringExtra(SearchManager.QUERY);
-        System.out.println(query);
 
         // esto sirve para guardar las busquedas recientes
-
         Intent intent  = getIntent();
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -53,10 +51,10 @@ public class SearchActivity extends Activity {
 
         feed_fuentes = new MainActivity().feed;
 
-        for (int i = 0; i < feed_fuentes.getItemCount(); i++) {
-            if (feed_fuentes.getItem(i).getTitle().contains(query))
-                feed_fuentes2.addItem(feed_fuentes.getItem(i));
-        }
+        if (feed_fuentes != null)
+            for (int i = 0; i < feed_fuentes.getItemCount(); i++)
+                if (feed_fuentes.getItem(i).getTitle().contains(query))
+                    feed_fuentes2.addItem(feed_fuentes.getItem(i));
 
         // Initialize the variables:
         lv = (ListView) findViewById(R.id.encontrados);
@@ -83,8 +81,8 @@ public class SearchActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch (id) {
-
+        switch (id)
+        {
             case android.R.id.home:
                 // app icon in action bar clicked; finish activity to go home
                 finish();

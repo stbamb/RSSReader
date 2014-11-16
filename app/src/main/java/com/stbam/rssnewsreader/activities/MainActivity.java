@@ -53,6 +53,8 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
+
+
         // set the feed link for refresh
         feedLink = new SplashActivity().lista_sources;
 
@@ -149,10 +151,13 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void startAddActivity() {
+    public void startAddActivity()
+    {
+        Intent intent2 = getIntent();
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        String id = intent2.getStringExtra("ID");
+        intent.putExtra("ID", id);
         startActivity(intent);
-        //this.finish();
     }
 
     public void startLocationActivity() {
@@ -181,7 +186,7 @@ public class MainActivity extends Activity {
         feedLink = new AddActivity().feedLink;
 
         if (feedLink == null)
-            feedLink = new SplashActivity().lista_sources2;
+            feedLink = new SplashActivity().lista_sources;
 
         // trigger feed refresh:
         Thread thread = new Thread(new Runnable() {

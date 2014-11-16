@@ -31,7 +31,6 @@ import java.util.List;
 
 import static com.facebook.Session.setActiveSession;
 
-
 public class InitialActivity extends Activity {
 
     public static String current_user_name = "";
@@ -39,6 +38,7 @@ public class InitialActivity extends Activity {
     public static String current_user_email = "";
     public static boolean terminado = false;
     public static LoginButton authButton;
+    public final static String ID = "ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,7 +53,6 @@ public class InitialActivity extends Activity {
         {
             actual.close();
             actual.closeAndClearTokenInformation();
-            //startSplashActivity();
         }
     }
 
@@ -69,8 +68,11 @@ public class InitialActivity extends Activity {
         startActivity(intent);
     }
 
-    public void startSplashActivity() {
+    // manda el id del usuario de FB
+    public void startSplashActivity()
+    {
         Intent intent = new Intent(InitialActivity.this, SplashActivity.class);
+        intent.putExtra(ID, current_user_id);
         startActivity(intent);
         finish();
     }
@@ -115,8 +117,8 @@ public class InitialActivity extends Activity {
 
         if (actual != null && actual.isOpened() && estaRegistrado)
             startSplashActivity();
-
-        else {
+        else
+        {
             AlertDialog alertDialog1 = new AlertDialog.Builder(InitialActivity.this).create();
 
             alertDialog1.setTitle("RSS Reader");
