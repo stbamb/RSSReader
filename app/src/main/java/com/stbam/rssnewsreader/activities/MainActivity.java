@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.image.ImageLoader;
+import com.stbam.rssnewsreader.location.LocationActivity;
 import com.stbam.rssnewsreader.parser.DOMParser;
 import com.stbam.rssnewsreader.parser.FeedSource;
 import com.stbam.rssnewsreader.parser.RSSFeed;
@@ -135,12 +136,22 @@ public class MainActivity extends Activity {
                 }
                 return true;
 
+            case R.id.location_option:
+                startLocationActivity();
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void startAddActivity() {
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        startActivity(intent);
+        //this.finish();
+    }
+
+    public void startLocationActivity() {
+        Intent intent = new Intent(MainActivity.this, LocationActivity.class);
         startActivity(intent);
         //this.finish();
     }

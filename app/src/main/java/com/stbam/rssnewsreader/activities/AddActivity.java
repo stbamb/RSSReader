@@ -36,6 +36,8 @@ public class AddActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
+        // para poder ir a la actividad anterior
+        // sin necesidad de presionar el boton back
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 

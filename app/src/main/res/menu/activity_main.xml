@@ -37,6 +37,12 @@
                 android:title="Ordenar alfabéticamente"/>
 
             <item
+                android:id="@+id/location_option"
+                android:icon="@drawable/ic_action_place"
+                android:showAsAction="always|withText"
+                android:title="Obtener mi localización"/>
+
+            <item
                 android:id="@+id/youtube_option"
                 android:icon="@drawable/ic_action_play_over_video"
                 android:showAsAction="always|withText"
