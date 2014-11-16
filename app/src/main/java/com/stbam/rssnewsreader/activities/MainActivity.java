@@ -1,4 +1,4 @@
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.activities;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -20,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.image.ImageLoader;
 import com.stbam.rssnewsreader.parser.DOMParser;
 import com.stbam.rssnewsreader.parser.FeedSource;
@@ -28,6 +30,7 @@ import com.stbam.rssnewsreader.parser.RSSFeed;
 import com.stbam.rssnewsreader.youtube.CategoriesActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends Activity {
 
@@ -37,7 +40,6 @@ public class MainActivity extends Activity {
     public static ArrayList<FeedSource> feedLink;
     public static boolean empiezaVacio;
     static MainActivity activityA;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class MainActivity extends Activity {
         // Initialize the variables:
         lv = (ListView) findViewById(R.id.listView);
         lv.setVerticalFadingEdgeEnabled(true);
+
+
 
         // Set an Adapter to the ListView
         adapter = new CustomListAdapter(this);
@@ -121,26 +125,33 @@ public class MainActivity extends Activity {
                 startAccountActivity();
                 return true;
 
+            case R.id.sort_option:
+                if (feed != null) {
+                    Collections.sort(feed.getLista());
+                    lv.setAdapter(adapter);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "No hay elementos que ordenar", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void startAddActivity()
-    {
+    public void startAddActivity() {
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
         startActivity(intent);
         //this.finish();
     }
 
-    public void startYouTubeActivity()
-    {
+    public void startYouTubeActivity() {
         Intent intent = new Intent(MainActivity.this, CategoriesActivity.class);
         startActivity(intent);
         //this.finish();
     }
 
-    public void startAccountActivity()
-    {
+    public void startAccountActivity() {
         Intent intent = new Intent(MainActivity.this, AccountActivity.class);
         startActivity(intent);
         //this.finish();
@@ -162,12 +173,10 @@ public class MainActivity extends Activity {
                 int itemes_feed = feedLink.size();
                 boolean todoNulo = true;
 
-                for (int i = 0; i < itemes_feed; i++)
-                {
+                for (int i = 0; i < itemes_feed; i++) {
                     FeedSource s = feedLink.get(i);
                     //System.out.println("Nombre: " + s.getNombre() + " URL: " + s.getURL() + " Aceptado: " + s.isAceptado());
-                    if (s.isAceptado())
-                    {
+                    if (s.isAceptado()) {
                         feed = tmpDOMParser.parseXml(s.getURL(), s.getNombre());
                         todoNulo = false;
                     }
@@ -190,13 +199,15 @@ public class MainActivity extends Activity {
                                 adapter.notifyDataSetChanged();
                             }
                             item.setEnabled(false);
-                            new CountDownTimer(3000, 1000) {public void onTick(long millisUntilFinished) {}
+                            new CountDownTimer(3000, 1000) {
+                                public void onTick(long millisUntilFinished) {
+                                }
 
-                            public void onFinish() {
-                                item.setEnabled(true);
-                            }        }.start();
-                        }
-                        else if (feed == null)
+                                public void onFinish() {
+                                    item.setEnabled(true);
+                                }
+                            }.start();
+                        } else if (feed == null)
                             lv.setAdapter(null);
                     }
                 });

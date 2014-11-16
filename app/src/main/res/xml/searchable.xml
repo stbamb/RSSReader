@@ -6,9 +6,8 @@
     android:searchMode="showSearchLabelAsBadge"
     android:searchSettingsDescription="Custom Suggestions"
     android:queryAfterZeroResults="false"
-    android:searchSuggestSelection=" ? "
     android:searchSuggestIntentAction="android.intent.action.VIEW"
     android:voiceSearchMode="showVoiceSearchButton"
-
-    >
+    android:searchSuggestAuthority="com.stbam.rssnewsreader.logic.SugerenciasRecientes"
+    android:searchSuggestSelection=" ? "    >
 </searchable>

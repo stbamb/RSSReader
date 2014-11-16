@@ -1,4 +1,4 @@
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +13,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.parser.RSSFeed;
 import java.util.Arrays;
 import java.util.List;

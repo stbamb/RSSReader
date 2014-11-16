@@ -1,6 +1,6 @@
 // Copyright 2012 Google Inc. All Rights Reserved.
 
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.youtube;
 
 /**
  * Static container class for holding a reference to your YouTube Developer Key.

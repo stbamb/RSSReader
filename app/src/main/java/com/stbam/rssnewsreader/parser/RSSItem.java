@@ -10,7 +10,7 @@ import java.io.Serializable;
 // con sus respectivos atributos encapsulados al caso de la aplicacion
 // implementa el interface Serializable para que sea compatible
 // con la clase RSSFeed
-public class RSSItem implements Serializable {
+public class RSSItem implements Serializable, Comparable<RSSItem> {
 
     private static final long serialVersionUID = 1L;
     private String _title = null;
@@ -22,6 +22,12 @@ public class RSSItem implements Serializable {
     private boolean _like = false;
     private boolean _seen = false;
     private boolean _compartido = false;
+
+    @Override
+    public int compareTo(RSSItem other) {
+        return _title.compareTo(other.getTitle());
+    }
+
 
     public void setTitle(String title) {
         _title = title;

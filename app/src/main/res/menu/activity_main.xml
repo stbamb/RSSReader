@@ -8,7 +8,6 @@
         android:showAsAction="ifRoom"
         android:title="Búsqueda"
         android:textColor="@color/white"
-        android:hint="hola soy german"
         android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
         android:actionViewClass="android.widget.SearchView" />
 
@@ -30,6 +29,12 @@
                 android:icon="@drawable/ic_action_new"
                 android:showAsAction="always|withText"
                 android:title="Agregar nuevas fuentes"/>
+
+            <item
+                android:id="@+id/sort_option"
+                android:icon="@drawable/ic_action_sort_by_size"
+                android:showAsAction="always|withText"
+                android:title="Ordenar alfabéticamente"/>
 
             <item
                 android:id="@+id/youtube_option"

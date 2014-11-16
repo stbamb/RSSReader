@@ -1,4 +1,4 @@
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -14,8 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.parser.FeedSource;
-import com.stbam.widgets.AnimatedExpandableListView;
+import com.stbam.rssnewsreader.widgets.AnimatedExpandableListView;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;

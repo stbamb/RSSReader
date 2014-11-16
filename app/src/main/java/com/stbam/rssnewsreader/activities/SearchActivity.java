@@ -1,10 +1,12 @@
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,11 +16,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.stbam.rssnewsreader.image.ImageLoader;
-import com.stbam.rssnewsreader.parser.FeedSource;
-import com.stbam.rssnewsreader.parser.RSSFeed;
 
-import java.util.ArrayList;
+import com.stbam.rssnewsreader.R;
+import com.stbam.rssnewsreader.image.ImageLoader;
+import com.stbam.rssnewsreader.logic.SugerenciasRecientes;
+import com.stbam.rssnewsreader.parser.RSSFeed;
 
 public class SearchActivity extends Activity {
 
@@ -36,6 +38,18 @@ public class SearchActivity extends Activity {
         feed_fuentes2 = new RSSFeed();
         setContentView(R.layout.activity_search);
         query = getIntent().getStringExtra(SearchManager.QUERY);
+        System.out.println(query);
+
+        // esto sirve para guardar las busquedas recientes
+
+        Intent intent  = getIntent();
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    SugerenciasRecientes.AUTHORITY, SugerenciasRecientes.MODE);
+            suggestions.saveRecentQuery(query, null);
+        }
 
         feed_fuentes = new MainActivity().feed;
 

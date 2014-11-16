@@ -10,10 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.stbam.rssnewsreader.MainActivity;
+import com.stbam.rssnewsreader.activities.MainActivity;
 import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.parser.FeedSource;
 import com.stbam.rssnewsreader.parser.JSONParser;
@@ -78,13 +77,11 @@ public class CategoriesActivity extends ListActivity {
             super.onListItemClick(l, v, position, id);
 
             boolean tieneVideo = false;
-            System.out.println("listItems[position]: " + listItems[position]);
 
             for (int i = 0; i < lista_videos.size(); i++) {
 
                 if (lista_videos.get(i).getCategoria().toLowerCase().equals(listItems[position].toLowerCase()))
                 {
-                    System.out.println("lista_videos.get(i).getCategoria(): " +lista_videos.get(i).getCategoria());
                     tieneVideo = true;
                     startYouTubeActivity(lista_videos.get(i).getURL());
                 }

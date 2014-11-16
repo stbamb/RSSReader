@@ -1,4 +1,4 @@
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.activities;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.parser.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -408,8 +410,6 @@ public class SplashActivity extends Activity {
                // Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
             sinterminar = false;
-
-            //
 
             lista_sources_viejos2 = leerRegistros(sourceName);
 

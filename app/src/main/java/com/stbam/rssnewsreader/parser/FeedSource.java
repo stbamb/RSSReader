@@ -15,7 +15,6 @@ public class FeedSource {
     private String idioma;
     private boolean aceptado = false;
 
-
     public String getURLPagina() {
         return URLPagina;
     }

@@ -1,9 +1,9 @@
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,8 +14,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-
-import java.util.Arrays;
+import com.stbam.rssnewsreader.R;
 
 
 public class AccountActivity extends Activity {
@@ -27,6 +26,11 @@ public class AccountActivity extends Activity {
         llenarInfoFacebook();
         LoginButton authButton = (LoginButton) findViewById(R.id.authButton2);
 
+        // para poder ir a la actividad anterior
+        // sin necesidad de presionar el boton back
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         // se le asigna un listener al boton de facebook
         authButton.setOnClickListener(new View.OnClickListener() {
 
@@ -34,9 +38,10 @@ public class AccountActivity extends Activity {
             public void onClick(View v) {
 
                 Session session = Session.getActiveSession();
-                if (session != null)
+                if (session != null) {
+                    session.close();
                     session.closeAndClearTokenInformation();
-
+                }
                 // sirve para cerrar MainActivity
                 startInitialActivity();
                 android.os.Process.killProcess(android.os.Process.myPid());
@@ -64,7 +69,13 @@ public class AccountActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                // app icon in action bar clicked; finish activity to go home
+                finish();
+                return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

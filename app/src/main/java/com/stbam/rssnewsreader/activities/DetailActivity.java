@@ -1,4 +1,4 @@
-package com.stbam.rssnewsreader;
+package com.stbam.rssnewsreader.activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.FacebookRequestError;
@@ -24,6 +23,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
+import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.parser.RSSFeed;
 
 import org.json.JSONException;

@@ -45,4 +45,9 @@ public class RSSFeed implements Serializable {
     public int getItemCount() {
         return _itemCount;
     }
+
+    public List getLista()
+    {
+        return _itemList;
+    }
 }

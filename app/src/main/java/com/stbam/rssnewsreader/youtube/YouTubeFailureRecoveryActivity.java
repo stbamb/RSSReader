@@ -19,7 +19,6 @@ package com.stbam.rssnewsreader.youtube;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
-import com.stbam.rssnewsreader.DeveloperKey;
 import com.stbam.rssnewsreader.R;
 
 import android.content.Intent;

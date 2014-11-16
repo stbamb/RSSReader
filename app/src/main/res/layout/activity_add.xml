@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <com.stbam.widgets.AnimatedExpandableListView
+    <com.stbam.rssnewsreader.widgets.AnimatedExpandableListView
         android:id="@+id/listView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

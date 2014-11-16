@@ -1,4 +1,4 @@
-package com.stbam.widgets;
+package com.stbam.rssnewsreader.widgets;
 
 /**
  * Created by Esteban on 10/29/2014.
