@@ -25,10 +25,10 @@ public class DetailFragment extends Fragment {
     public static int fPos2; // esta variable se usa para saber cual historia publicar a Facebook desde
     RSSFeed fFeed;
 
-        // variables utilizadas para Facebook
-        private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
-        private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
-        private boolean pendingPublishReauthorization = false;
+    // variables utilizadas para Facebook
+    private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+    private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
+    private boolean pendingPublishReauthorization = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,6 @@ public class DetailFragment extends Fragment {
         sv.setVerticalFadingEdgeEnabled(true);
 
         // todas las propiedades del WebView
-
         WebSettings ws = desc.getSettings();
         ws.setJavaScriptEnabled(true);
         ws.setLoadWithOverviewMode(true);
@@ -65,27 +64,29 @@ public class DetailFragment extends Fragment {
 
         if (fPos == fFeed.getItemCount() - 2)
             fPos2 += 2;
+
         title.setText(fFeed.getItem(fPos).getTitle());
-        //System.out.println("Desde DetailFragment esta es la posicion del item: " + fPos2);
-        //System.out.println("Largo actual del feed: " + fFeed.getItemCount());
-
-       // System.out.println(fFeed.getItem(fPos).getDescription());
-
         String data = "<html><body><center>" + fFeed.getItem(fPos).getDescription() + "</center></body></html>";
         desc.loadData(data, "text/html; charset=UTF-8", null);
 
         if (fFeed.getItem(fPos).isCompartido())
             compartir.setVisibility(View.INVISIBLE);
 
-        // para ver como se forman los tags HTML que carga el WebView
-        //Log.d("HTML", data);
+        if (fPos == 1 || fPos == 4)
+            compartir.setEnabled(false);
+
         return view;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState)
+    {
         super.onSaveInstanceState(outState);
         outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
-        //.onSaveInstanceState(outState);
+    }
+
+    public static void desactivarLike(int pos)
+    {
+
     }
 }

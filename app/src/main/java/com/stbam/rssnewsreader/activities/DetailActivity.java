@@ -2,6 +2,7 @@ package com.stbam.rssnewsreader.activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +27,14 @@ import com.facebook.widget.FacebookDialog;
 import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.parser.RSSFeed;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,6 +54,13 @@ public class DetailActivity extends FragmentActivity {
     private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
     private boolean pendingPublishReauthorization = false;
     private UiLifecycleHelper uiHelper;
+    public static boolean like_enviado = false;
+    public static boolean dislike_enviado = false;
+    public static String id_usuario = "";
+    public static String categoria_like = "";
+    public static String link_like = "";
+    public static String respuesta_servidor_like = "";
+    public static String respuesta_servidor_dislike = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +91,6 @@ public class DetailActivity extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		new MenuInflater(this).inflate(R.menu.activity_desc, menu);
-
 		return true;
 	}
 
@@ -236,4 +251,209 @@ public class DetailActivity extends FragmentActivity {
         uiHelper.onDestroy();
     }
 
+    public void like(View view)
+    {
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("ID");
+        id_usuario = id;
+
+        int pos = new DetailFragment().fPos2 - 1;
+
+        // prevencion de errores
+        if (pos < 0)
+            pos = 0;
+        else if (pos >= feed.getItemCount())
+            pos = feed.getItemCount() - 1;
+
+        System.out.println("Desde DetailActivity, este es el ID del usuario: " + id + " y esta es la posicion: " + pos);
+
+        categoria_like = obtenerCategoria(feed.getItem(pos).get_source_page());
+        System.out.println(categoria_like);
+        link_like = feed.getItem(pos).getLink();
+        System.out.println(link_like);
+
+        int abc = 0;
+
+        EnviarLike s = new EnviarLike();
+        s.execute();
+
+        while (!like_enviado)
+            abc++;
+
+        System.out.println("Desde DetailActivity, esta fue la respuesta del servidor: " + respuesta_servidor_like);
+
+        if (respuesta_servidor_like.equals("like saved"))
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), "Le has dado like a un artículo de la categoría " + categoria_like, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+    }
+
+    public void dislike(View view)
+    {
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("ID");
+        id_usuario = id;
+
+        int pos = new DetailFragment().fPos2 - 1;
+
+        // prevencion de errores
+        if (pos < 0)
+            pos = 0;
+        else if (pos >= feed.getItemCount())
+            pos = feed.getItemCount() - 1;
+
+        System.out.println("Desde DetailActivity, este es el ID del usuario: " + id + " y esta es la posicion: " + pos);
+
+        categoria_like = obtenerCategoria(feed.getItem(pos).get_source_page());
+        System.out.println(categoria_like);
+        link_like = feed.getItem(pos).getLink();
+        System.out.println(link_like);
+
+        int abc = 0;
+
+        EnviarDislike s = new EnviarDislike();
+        s.execute();
+
+        while (!dislike_enviado)
+            abc++;
+
+        System.out.println("Desde DetailActivity, esta fue la respuesta del servidor: " + respuesta_servidor_dislike);
+
+        if (respuesta_servidor_dislike.equals("dislike saved"))
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), "Le has dado dislike a un artículo de la categoría " + categoria_like, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+    }
+
+    public class EnviarLike extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+            try {
+
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppostreq = new HttpPost("http://proyecto2.cloudapp.net:3100/like");
+                JSONObject jsonObj = new JSONObject();
+                try
+                {
+                    jsonObj.put("id", id_usuario);
+                    jsonObj.put("categoria", categoria_like);
+                    jsonObj.put("link", link_like);
+                } catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+
+                StringEntity se = new StringEntity(jsonObj.toString());
+
+                se.setContentType("application/json;charset=UTF-8");
+                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
+                httppostreq.setEntity(se);
+
+                HttpResponse httpresponse = httpclient.execute(httppostreq);
+
+                String responseText = null;
+                try {
+                    responseText = EntityUtils.toString(httpresponse.getEntity());
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                respuesta_servidor_like = responseText;
+
+            }catch (Exception ex) {
+                System.out.println(ex.toString());
+                // handle exception here
+            } finally {
+                //httpClient.getConnectionManager().shutdown();
+            }
+
+            like_enviado = true;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            like_enviado = true;
+        }
+    }
+
+    public class EnviarDislike extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+            try {
+
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppostreq = new HttpPost("http://proyecto2.cloudapp.net:3100/dislike");
+                JSONObject jsonObj = new JSONObject();
+                try
+                {
+                    jsonObj.put("id", id_usuario);
+                    jsonObj.put("categoria", categoria_like);
+                    jsonObj.put("link", link_like);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                StringEntity se = new StringEntity(jsonObj.toString());
+
+                se.setContentType("application/json;charset=UTF-8");
+                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
+                httppostreq.setEntity(se);
+
+                HttpResponse httpresponse = httpclient.execute(httppostreq);
+
+                String responseText = null;
+                try {
+                    responseText = EntityUtils.toString(httpresponse.getEntity());
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                respuesta_servidor_dislike = responseText;
+
+            }catch (Exception ex) {
+                System.out.println(ex.toString());
+                // handle exception here
+            } finally {
+                //httpClient.getConnectionManager().shutdown();
+            }
+
+            dislike_enviado = true;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            dislike_enviado = true;
+        }
+    }
+
+    public String obtenerCategoria(String nombre)
+    {
+        String categoria = "";
+
+        MainActivity a = new MainActivity();
+
+        if (a.feedLink == null)
+            return categoria;
+
+        for (int i = 0; i < a.feedLink.size(); i++)
+        {
+            if (a.feedLink.get(i).getNombre().toLowerCase().equals(nombre.toLowerCase()))
+                categoria = a.feedLink.get(i).getCategoria();
+        }
+
+        return categoria;
+    }
 }

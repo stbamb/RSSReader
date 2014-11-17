@@ -44,6 +44,12 @@
                 android:title="Actualizar contenido"/>
 
             <item
+                android:id="@+id/recommendations_option"
+                android:icon="@drawable/ic_action_good"
+                android:showAsAction="always|withText"
+                android:title="Recomendaciones"/>
+
+            <item
                 android:id="@+id/sort_option"
                 android:icon="@drawable/ic_action_sort_by_size"
                 android:showAsAction="always|withText"
@@ -56,10 +62,10 @@
                 android:title="Filtrar contenido"/>
 
             <item
-                android:id="@+id/recommendations_option"
-                android:icon="@drawable/ic_action_good"
+                android:id="@+id/editors_option"
+                android:icon="@drawable/ic_action_important"
                 android:showAsAction="always|withText"
-                android:title="Recomendaciones"/>
+                android:title="Editors' Choice"/>
 
             <item
                 android:id="@+id/account_option"

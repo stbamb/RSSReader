@@ -358,7 +358,7 @@ public class AddActivity extends Activity
     {
         Intent intent = getIntent();
         String id = intent.getStringExtra("ID");
-        System.out.println("Desde AddActivity, este es el ID del usuario: " + id);
+        //System.out.println("Desde AddActivity, este es el ID del usuario: " + id);
         id_usuario = id;
 
         int abc = 0;

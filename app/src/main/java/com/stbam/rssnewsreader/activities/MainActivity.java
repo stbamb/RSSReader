@@ -43,7 +43,6 @@ public class MainActivity extends Activity {
     CustomListAdapter adapter;
     public static ArrayList<FeedSource> feedLink;
     public static boolean empiezaVacio;
-    public static RSSFeed feed_fuentes2 = new RSSFeed();
     public boolean terminado = false;
     public static String miPais = "";
 
@@ -52,8 +51,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-
 
         // set the feed link for refresh
         feedLink = new SplashActivity().lista_sources;
@@ -82,12 +79,14 @@ public class MainActivity extends Activity {
                 int pos = arg2;
 
                 // llamar a la funcion que marca el articulo como leido
-
+                Intent intent2 = getIntent();
+                String id = intent2.getStringExtra("ID");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("feed", feed);
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                 intent.putExtras(bundle);
                 intent.putExtra("pos", pos);
+                intent.putExtra("ID", id);
                 startActivity(intent);
 
             }
@@ -147,6 +146,10 @@ public class MainActivity extends Activity {
                 filterContentByCountry();
                 return true;
 
+            case R.id.editors_option:
+                startEditorsActivity();
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -157,6 +160,13 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
         String id = intent2.getStringExtra("ID");
         intent.putExtra("ID", id);
+        startActivity(intent);
+    }
+
+    public void startEditorsActivity()
+    {
+        Intent intent2 = getIntent();
+        Intent intent = new Intent(MainActivity.this, EditorsActivity.class);
         startActivity(intent);
     }
 
@@ -185,6 +195,8 @@ public class MainActivity extends Activity {
         terminado = false;
         feedLink = new AddActivity().feedLink;
 
+        lv.setEnabled(false);
+
         if (feedLink == null)
             feedLink = new SplashActivity().lista_sources;
 
@@ -208,14 +220,8 @@ public class MainActivity extends Activity {
                     public void run() {
                         if (feed != null && feed.getItemCount() > 0)
                         {
-                            if (empiezaVacio)
-                                lv.setAdapter(adapter);
-
-                            else
-                            {
-                                lv.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            }
+                            lv.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                         }
                         else if (feed == null)
                             lv.setAdapter(null);
@@ -224,6 +230,13 @@ public class MainActivity extends Activity {
             }
         });
         thread.start();
+
+        int abc = 0;
+
+        while (thread.getState() != Thread.State.TERMINATED)
+            abc++;
+
+        lv.setEnabled(true);
     }
 
     @Override
@@ -281,14 +294,14 @@ public class MainActivity extends Activity {
             TextView tvDate = (TextView) listItem.findViewById(R.id.date);
 
             // Set the views in the layout
-            imageLoader.DisplayImage(feed.getItem(pos).getImage(), iv);
-            tvTitle.setText(feed.getItem(pos).getTitle());
-            tvDate.setText(feed.getItem(pos).get_source_page());
+            if (feed != null) {
+                imageLoader.DisplayImage(feed.getItem(pos).getImage(), iv);
+                tvTitle.setText(feed.getItem(pos).getTitle());
+                tvDate.setText(feed.getItem(pos).get_source_page());
+            }
             return listItem;
         }
-
     }
-
 
     public void filterContentByCountry()
     {

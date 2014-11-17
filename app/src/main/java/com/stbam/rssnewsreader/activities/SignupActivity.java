@@ -148,8 +148,8 @@ public class SignupActivity extends Activity {
 
         // launch List activity
         Intent intent = new Intent(SignupActivity.this, SplashActivity.class);
+        intent.putExtra("ID", current_user_id);
         startActivity(intent);
-
         // kill this activity
         finish();
     }
