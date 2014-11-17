@@ -24,6 +24,8 @@ import com.stbam.rssnewsreader.R;
 
 /**
  * Map error codes to error messages.
+ *  codigo tomado de http://www.facebook.com/l.php?u=http%3A%2F%2Fdeveloper.android.com%2Fshareables%2Ftraining%2FLocationUpdates.zip&h=cAQE1gZO1\
+ * y adaptado a nuestras necesidades
  */
 public class LocationServiceErrorMessages {
 

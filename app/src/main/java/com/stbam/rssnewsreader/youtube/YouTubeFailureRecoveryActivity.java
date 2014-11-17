@@ -27,6 +27,7 @@ import android.widget.Toast;
 /**
  * An abstract activity which deals with recovering from errors which may occur during API
  * initialization, but can be corrected through user action.
+ * codigo tomado de https://code.google.com/p/youtube-api-samples/source/browse/#git%2Fandroid-player%2Fsrc%253Fstate%253Dclosed
  */
 public abstract class YouTubeFailureRecoveryActivity extends YouTubeBaseActivity implements
     YouTubePlayer.OnInitializedListener {

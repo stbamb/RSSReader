@@ -30,6 +30,7 @@ import android.view.MenuItem;
  * displays a YouTube Video in a {@link YouTubePlayerView}.
  * <p>
  * Note, to use a {@link YouTubePlayerView}, your activity must extend {@link YouTubeBaseActivity}.
+ * codigo tomado de https://code.google.com/p/youtube-api-samples/source/browse/#git%2Fandroid-player%2Fsrc%253Fstate%253Dclosed
  */
 public class YoutubeActivity extends YouTubeFailureRecoveryActivity {
 

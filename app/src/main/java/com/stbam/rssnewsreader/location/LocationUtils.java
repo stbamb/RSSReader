@@ -22,6 +22,8 @@ import android.location.Location;
 import com.stbam.rssnewsreader.R;
 /**
  * Defines app-wide constants and utilities
+ *  codigo tomado de http://www.facebook.com/l.php?u=http%3A%2F%2Fdeveloper.android.com%2Fshareables%2Ftraining%2FLocationUpdates.zip&h=cAQE1gZO1\
+ * y adaptado a nuestras necesidades
  */
 public final class LocationUtils {
 

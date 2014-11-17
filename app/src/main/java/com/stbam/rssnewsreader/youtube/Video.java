@@ -3,6 +3,7 @@ package com.stbam.rssnewsreader.youtube;
 /**
  * Created by Esteban on 11/14/2014.
  */
+// clase creada solo para mantener los atributos basicos de un objeto video
 public class Video {
 
     private String URL;

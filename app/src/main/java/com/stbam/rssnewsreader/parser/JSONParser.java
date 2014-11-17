@@ -25,7 +25,6 @@ import org.json.JSONObject;
 
 // Un parser tomado del tutorial de http://techiedreams.com/android-simple-rss-reader
 // y adaptado a nuestras necesidades
-
 public class JSONParser {
 
     static String response = null;
@@ -51,6 +50,7 @@ public class JSONParser {
      * @url - url to make request
      * @method - http request method
      * @params - http request params
+     * hace un request y parsea el url
      * */
     public String makeServiceCall(String url, int method,
                                   List<NameValuePair> params) {

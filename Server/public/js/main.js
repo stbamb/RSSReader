@@ -92,7 +92,7 @@ function agregarVideo(){
 	var v_id = link.substring(link.indexOf('watch?v=')+8);
 	
 	if (cat != "" && link != ""){
-		var video = {'video_id': link, 'categoria': cat};
+		var video = {'video_id': v_id, 'categoria': cat};
 		guardarVideo(video);
 	}
 	else{

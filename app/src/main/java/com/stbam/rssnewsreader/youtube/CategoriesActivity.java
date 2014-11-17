@@ -47,6 +47,8 @@ public class CategoriesActivity extends ListActivity {
         ArrayList<String> categorias = obtenerCategorias();
         listItems = new String[categorias.size()];
 
+        // por cada una de las categorias existentes
+        // se asigna un video, si este esta disponible
         for (int i = 0; i < categorias.size(); i++) {
 
             String nombre_categoria = categorias.get(i);
@@ -54,53 +56,39 @@ public class CategoriesActivity extends ListActivity {
             listItems[i] =  Character.toString(nombre_categoria.charAt(0)).toUpperCase() + nombre_categoria.substring(1);
         }
 
+        // obtiene los videos existentes
+        // para luego adaptarlos a la lista
         GetVideos a = new GetVideos();
         a.execute();
         int abc = 0;
         while (sinterminar)
             abc++;
 
-        for (int i = 0; i < lista_videos.size(); i++) {
-
-            System.out.println(lista_videos.get(i).getURL());
-            System.out.println(lista_videos.get(i).getCategoria());
-        }
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-
         setListAdapter(adapter);
-
         }
 
+        // un listener
         @Override
         protected void onListItemClick(ListView l, View v, int position, long id) {
             super.onListItemClick(l, v, position, id);
 
             boolean tieneVideo = false;
 
-            for (int i = 0; i < lista_videos.size(); i++) {
-
+            for (int i = 0; i < lista_videos.size(); i++)
                 if (lista_videos.get(i).getCategoria().toLowerCase().equals(listItems[position].toLowerCase()))
                 {
                     tieneVideo = true;
                     startYouTubeActivity(lista_videos.get(i).getURL());
                 }
-
-            }
-
             if (!tieneVideo)
             {
                 Toast toast = Toast.makeText(this, "La categoría " + listItems[position] + " aún no tiene un video asignado.", Toast.LENGTH_SHORT);
                 toast.show();
             }
-
-
-            
-
-
-
         }
 
+    // funciones para llamar a otros activities de una forma mas ordenada
     public void startYouTubeActivity(String link)
     {
         Intent intent = new Intent(CategoriesActivity.this, YoutubeActivity.class);
@@ -119,7 +107,7 @@ public class CategoriesActivity extends ListActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            // para volver a la pantalla anterior
             case android.R.id.home:
                 // app icon in action bar clicked; finish activity to go home
                 finish();
@@ -147,6 +135,8 @@ public class CategoriesActivity extends ListActivity {
         return categorias;
     }
 
+    // clase asincrona que obtiene los videos del webservice
+    // y luego los asigna a las categorias que existen
     private class GetVideos extends AsyncTask<Void, Void, Void> {
 
         @Override

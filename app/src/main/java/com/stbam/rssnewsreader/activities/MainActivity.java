@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,19 +17,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.image.ImageLoader;
 import com.stbam.rssnewsreader.location.LocationActivity;
@@ -39,11 +33,9 @@ import com.stbam.rssnewsreader.parser.FeedSource;
 import com.stbam.rssnewsreader.parser.JSONParser;
 import com.stbam.rssnewsreader.parser.RSSFeed;
 import com.stbam.rssnewsreader.youtube.CategoriesActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -126,12 +118,15 @@ public class MainActivity extends Activity implements TextWatcher {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search_option).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        // se setea el color de del searchwidget
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         TextView textView = (TextView) searchView.findViewById(id);
         textView.setTextColor(Color.WHITE);
         return true;
     }
 
+    // cada una de las opciones
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -181,6 +176,7 @@ public class MainActivity extends Activity implements TextWatcher {
         return super.onOptionsItemSelected(item);
     }
 
+    // funciones para llamar a otros activities de una forma mas ordenada
     public void startAddActivity()
     {
         Intent intent2 = getIntent();
@@ -190,6 +186,7 @@ public class MainActivity extends Activity implements TextWatcher {
         startActivity(intent);
     }
 
+    // funciones para llamar a otros activities de una forma mas ordenada
     public void startEditorsActivity()
     {
         Intent intent2 = getIntent();
@@ -197,24 +194,29 @@ public class MainActivity extends Activity implements TextWatcher {
         startActivity(intent);
     }
 
+    // funciones para llamar a otros activities de una forma mas ordenada
     public void startLocationActivity() {
         Intent intent = new Intent(MainActivity.this, LocationActivity.class);
         startActivity(intent);
         //this.finish();
     }
 
+    // funciones para llamar a otros activities de una forma mas ordenada
     public void startYouTubeActivity() {
         Intent intent = new Intent(MainActivity.this, CategoriesActivity.class);
         startActivity(intent);
         //this.finish();
     }
 
+    // funciones para llamar a otros activities de una forma mas ordenada
     public void startAccountActivity() {
         Intent intent = new Intent(MainActivity.this, AccountActivity.class);
         startActivity(intent);
         //this.finish();
     }
 
+    // se refresca la lista
+    // se bloquea la lista, para que asi no se produzcan errores
     public void refreshList(final MenuItem item)
     {
         // para que la proxima vez que se filtre contenido
@@ -274,6 +276,7 @@ public class MainActivity extends Activity implements TextWatcher {
     }
 
     // List adapter class
+    // adapta los elementos a la lista
     class CustomListAdapter extends BaseAdapter {
 
         private LayoutInflater layoutInflater;
@@ -330,6 +333,7 @@ public class MainActivity extends Activity implements TextWatcher {
         }
     }
 
+    // funcion que filtra el contenido basado en la ubicacion
     public void filterContentByCountry()
     {
         LocationActivity a = new LocationActivity();
@@ -415,6 +419,9 @@ public class MainActivity extends Activity implements TextWatcher {
         }
     }
 
+    // funcion que recomienda sources
+    // hace uso de la clase asincrona
+    // para llamar los webservice
     public void recomendarSource()
     {
         Intent intent = getIntent();

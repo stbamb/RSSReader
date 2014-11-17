@@ -15,7 +15,7 @@ import org.json.JSONObject;
  * Created by Esteban on 11/14/2014.
  */
 
-
+// solo una clase asincrona basica para volver un poco mas ordenado el proceso de logueo
 public class Login extends AsyncTask<Void, Void, Void> {
 
     public static String respuesta_servidor;
@@ -62,7 +62,6 @@ public class Login extends AsyncTask<Void, Void, Void> {
         }
 
         proceso_logueo_terminado = true;
-
         return null;
 
     }

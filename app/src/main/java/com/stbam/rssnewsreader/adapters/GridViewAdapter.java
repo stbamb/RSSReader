@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.stbam.rssnewsreader.R;
 
+// tomado de http://developer.android.com/guide/topics/ui/layout/gridview.html
 public class GridViewAdapter extends BaseAdapter {
     private Context mContext;
 

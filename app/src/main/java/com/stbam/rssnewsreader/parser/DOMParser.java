@@ -18,13 +18,11 @@ import org.xml.sax.InputSource;
 
 // Codigo basado en el tutorial de http://techiedreams.com/android-simple-rss-reader
 // y obviamente adaptado a nuestras necesidades
-
-
 public class DOMParser {
 
     private RSSFeed _feed = new RSSFeed();
-
-    public RSSFeed parseXml(String xml, String nombre) {
+    public RSSFeed parseXml(String xml, String nombre)
+    {
 
         // se definen diferentes urls porque para leer articulos de TheVerge.com y Polygon.com
         // es necesario un metodo distinto
@@ -200,6 +198,9 @@ public class DOMParser {
         }
     }
 
+    // este y el siguiete metodo sirven para parsear el documento leido desde el URL
+    // encuentra cada uno de los elementos (noticias) y saca por aparte
+    // cada uno de sus atributos para asi asignarlos a una instancia del objeto RSSItem
     private void leerTipoRaro(URL url, String nombre)
     {
         //System.out.println("Parseando el feed source de nombre: " + nombre);

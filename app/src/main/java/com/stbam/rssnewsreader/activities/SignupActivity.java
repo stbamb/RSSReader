@@ -83,7 +83,7 @@ public class SignupActivity extends Activity {
         while (!terminado)
             abc++;
 
-        // se intenta
+        // se intenta formar el JSON con los datos recolectados
         jsonObj = new JSONObject();
         try {
             jsonObj.put("name", current_user_name);
@@ -93,6 +93,8 @@ public class SignupActivity extends Activity {
             e.printStackTrace();
         }
 
+        // aqui se le envian los datos obtenidos al servidor
+        // y se verifica si el usuario ya existe
         Signup signup = new Signup();
         signup.execute();
 
@@ -101,6 +103,7 @@ public class SignupActivity extends Activity {
 
         System.out.println("Desde SignupActivity, esta fue la respuesta del servidor: " + respuesta_servidor);
 
+        // si el usuario ya existe, entonces se le devuelve a la pantalla principal
         if (respuesta_servidor.equals("user already exists"))
         {
 
@@ -120,6 +123,7 @@ public class SignupActivity extends Activity {
 
         }
 
+        // sino, se sigue a la siguiente actividad
         else
         {
             AlertDialog alertDialog1 = new AlertDialog.Builder(SignupActivity.this).create();
@@ -137,6 +141,7 @@ public class SignupActivity extends Activity {
         }
     }
 
+    // funciones para llamar a otros activities de una forma mas ordenada
     public void startInitialActivity() {
 
         // launch List activity
@@ -147,6 +152,7 @@ public class SignupActivity extends Activity {
         finish();
     }
 
+    // funciones para llamar a otros activities de una forma mas ordenada
     public void startSplashActivity() {
 
         // launch List activity
@@ -157,6 +163,9 @@ public class SignupActivity extends Activity {
         finish();
     }
 
+    // cuando se loguea en facebook se obtiene la informacion del usuario
+    // se igualan las variables estaticas de esta actividad a las variable de
+    // usuario de facebook
     public void llenarInfoFacebook()
     {
         LoginButton authButton = (LoginButton) findViewById(R.id.authButton3);
@@ -193,6 +202,7 @@ public class SignupActivity extends Activity {
         });
     }
 
+    // se obtiene la informacion de facebook
     public class getInfo extends AsyncTask<Void, Void, Void> {
 
         @Override
