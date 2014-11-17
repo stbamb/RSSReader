@@ -3,9 +3,6 @@ package com.stbam.rssnewsreader.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Geocoder;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
@@ -13,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -23,7 +19,8 @@ import com.facebook.widget.LoginButton;
 import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.logic.SugerenciasRecientes;
 
-
+// esta clase muestra la informacion del usuario
+// tambien tiene un boton de facebook de log out
 public class AccountActivity extends Activity {
 
     @Override
@@ -53,11 +50,7 @@ public class AccountActivity extends Activity {
                 startInitialActivity();
                 android.os.Process.killProcess(android.os.Process.myPid());
                 // se cierra la sesion y se mata la primera actividad en la pila de android
-
                 // inmediatamente despues la app vuelve a la pagina principal
-
-
-
             }
         });
     }
@@ -77,7 +70,7 @@ public class AccountActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-
+            // estos es para volver a la pantalla anterior
             case android.R.id.home:
                 // app icon in action bar clicked; finish activity to go home
                 finish();
@@ -145,6 +138,9 @@ public class AccountActivity extends Activity {
         });
     }
 
+    // codigo proveniente de http://developer.android.com/guide/topics/search/adding-recent-query-suggestions.html
+    // y adaptado
+    // es la funcion que se llama desde un boton, sirve par limpiar el historial de busquedas recientes
     public void borrarHistorial(View v)
     {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,

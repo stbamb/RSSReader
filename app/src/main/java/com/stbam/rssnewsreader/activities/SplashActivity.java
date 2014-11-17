@@ -29,11 +29,13 @@ import org.json.JSONObject;
 // Nos basamos en la idea del tutorial de http://techiedreams.com/android-simple-rss-reader/
 public class SplashActivity extends Activity {
 
-    public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json"; // para pruebas
+    //public static String url = "https://raw.githubusercontent.com/stbam/RSSReader/master/JSONExample.json"; // para pruebas
     public static String url2 = "http://proyecto2.cloudapp.net:3000/feeds"; // para progra
     public static ArrayList<FeedSource> lista_sources = new ArrayList<FeedSource>();
 	RSSFeed feed;
     JSONArray fuentessr = null;
+
+    // variables para parsear los elementos del JSON
     private static final String TAG_SOURCES = "source";
     private static final String TAG_SUBSCRIPTIONS = "subscriptions";
     private static final String TAG_URL = "url";
@@ -41,6 +43,8 @@ public class SplashActivity extends Activity {
     private static final String TAG_NOMBRE = "nombre";
     private static final String TAG_CATEGORIA = "categoria";
     private static final String TAG_IDIOMA = "idioma";
+
+    // para comprobar si el servidor respondio, o ya termino de escuchar
     public static boolean recoleccion_sources_sin_finalizar = true;
     public static String id_usuario = "";
     public static String[] lista_subscripciones = {};
@@ -69,18 +73,18 @@ public class SplashActivity extends Activity {
         for (int i = 0; i < lista_subscripciones.length; i++)
             System.out.println("Fuentes a las que el usuario " + id_usuario + " esta subscrito: " + lista_subscripciones[i].toString());
 
-        for (int i = 0; i < lista_sources.size(); i++) {
-            for (int j = 0; j < lista_subscripciones.length; j++) {
+        // se compara la lista de sources, con la lista de las subscripciones
+        // y si la lista de subscripciones tiene uno o mas elementos que si estan en
+        // la lista de fuentes, entonces se setea como aceptado
+        for (int i = 0; i < lista_sources.size(); i++)
+            for (int j = 0; j < lista_subscripciones.length; j++)
                 if (lista_sources.get(i).getNombre().toString().toLowerCase().equals(lista_subscripciones[j].toLowerCase()))
                     lista_sources.get(i).setAceptado(true);
-            }
-        }
 
 		ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (conMgr.getActiveNetworkInfo() == null)
         {
 			// no hay conexion a internet
-
             // No connectivity & Feed file doesn't exist: Show alert to exit
             // & check for connectivity
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -149,6 +153,8 @@ public class SplashActivity extends Activity {
 		}
 	}
 
+    // esta es la clase asincrona que obtiene tanto la lista de fuentes disponibles
+    // como la lista de fuentes a las que el usuario esta subscrito
     private class ObtenerFuentes extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -172,18 +178,16 @@ public class SplashActivity extends Activity {
                     fuentessr = jsonObj.getJSONArray(TAG_SOURCES);
 
                     // looping through All Contacts
-                    for (int i = 0; i < fuentessr.length(); i++) {
+                    for (int i = 0; i < fuentessr.length(); i++)
+                    {
                         JSONObject c = fuentessr.getJSONObject(i);
-
                         System.out.println("Sources recolectados desde archivo JSON: " + c.getString("nombre"));
-
                         FeedSource s = new FeedSource();
                         s.setURL(c.getString(TAG_URL));
                         s.setURLPagina(c.getString(TAG_URL_PAGINA));
                         s.setNombre(c.getString(TAG_NOMBRE));
                         s.setCategoria(c.getString(TAG_CATEGORIA));
                         s.setIdioma(c.getString(TAG_IDIOMA));
-
                         lista_sources.add(s);
                     }
                 } catch (JSONException e)

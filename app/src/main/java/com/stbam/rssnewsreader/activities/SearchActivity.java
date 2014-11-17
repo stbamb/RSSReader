@@ -41,7 +41,6 @@ public class SearchActivity extends Activity {
 
         // esto sirve para guardar las busquedas recientes
         Intent intent  = getIntent();
-
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
@@ -51,6 +50,8 @@ public class SearchActivity extends Activity {
 
         feed_fuentes = new MainActivity().feed;
 
+        // si uno de los sources coincide con la busqueda
+        // entonces se incluye para que luego sea mostrada
         if (feed_fuentes != null)
             for (int i = 0; i < feed_fuentes.getItemCount(); i++)
                 if (feed_fuentes.getItem(i).getTitle().contains(query))
@@ -60,7 +61,7 @@ public class SearchActivity extends Activity {
         lv = (ListView) findViewById(R.id.encontrados);
         lv.setVerticalFadingEdgeEnabled(true);
 
-        // Set an Adapter to the ListView
+        // nos adaptamos a los elementos encontrados
         adapter = new CustomListAdapter2(this);
         if (feed_fuentes != null)
             lv.setAdapter(adapter);
@@ -83,6 +84,7 @@ public class SearchActivity extends Activity {
 
         switch (id)
         {
+            // para volver a la pantalla anterior
             case android.R.id.home:
                 // app icon in action bar clicked; finish activity to go home
                 finish();
@@ -92,7 +94,7 @@ public class SearchActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    // List adapter class
+    // esto solo es un adaptador, funciona igual que el principal
     class CustomListAdapter2 extends BaseAdapter {
 
         private LayoutInflater layoutInflater;

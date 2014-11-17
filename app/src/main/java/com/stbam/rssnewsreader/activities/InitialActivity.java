@@ -31,6 +31,10 @@ import java.util.List;
 
 import static com.facebook.Session.setActiveSession;
 
+// basicamente esta es la actividad que abre
+// solo muestra dos opciones
+// log in, si el usuario ya existe
+// registrarse en el caso contrario
 public class InitialActivity extends Activity {
 
     public static String current_user_name = "";
@@ -46,6 +50,7 @@ public class InitialActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
         Session actual = Session.getActiveSession();
+        // se piden los permisos en facebook
         authButton = (LoginButton) findViewById(R.id.authButton);
         authButton.setReadPermissions(Arrays.asList("email", "public_profile"));
 
@@ -90,6 +95,8 @@ public class InitialActivity extends Activity {
         while (!terminado)
             abc++;
 
+        // una vez que los datos de facebook son obtenidos, entonces
+        // se comprueba que el usuario exista
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("name", current_user_name);
@@ -115,8 +122,11 @@ public class InitialActivity extends Activity {
         if (respuesta.equals("logged in"))
             estaRegistrado = true;
 
+        // si esta registrado, entonces empieza
         if (actual != null && actual.isOpened() && estaRegistrado)
             startSplashActivity();
+
+        // de lo contrario se muestra una alerta
         else
         {
             AlertDialog alertDialog1 = new AlertDialog.Builder(InitialActivity.this).create();
@@ -125,10 +135,8 @@ public class InitialActivity extends Activity {
             alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
-
                     actual.close();
                     actual.closeAndClearTokenInformation();
-
                 }
             });
 
@@ -136,6 +144,8 @@ public class InitialActivity extends Activity {
         }
     }
 
+    // lo unico que hace es recolectar la informacion de facebook
+    // para saber si el usuario ya esta registrado o no
     public class getInfo extends AsyncTask<Void, Void, Void>
     {
         @Override

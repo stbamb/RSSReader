@@ -29,6 +29,7 @@ import java.util.Arrays;
 
 public class SignupActivity extends Activity {
 
+    // variables para saber cuales son los datos principales del usuario
     public static String current_user_name = "";
     public static String current_user_id = "";
     public static String current_user_email = "";
@@ -57,7 +58,7 @@ public class SignupActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-
+            // para volver a la pantalla anterior
             case android.R.id.home:
                 // app icon in action bar clicked; finish activity to go home
                 finish();
@@ -74,6 +75,7 @@ public class SignupActivity extends Activity {
         Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
         llenarInfoFacebook();
 
+        // se obtiene la informacion basica del usuario
         getInfo a = new getInfo();
         a.execute();
 
@@ -81,6 +83,7 @@ public class SignupActivity extends Activity {
         while (!terminado)
             abc++;
 
+        // se intenta
         jsonObj = new JSONObject();
         try {
             jsonObj.put("name", current_user_name);

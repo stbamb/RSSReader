@@ -54,6 +54,8 @@ public class DetailActivity extends FragmentActivity {
     private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
     private boolean pendingPublishReauthorization = false;
     private UiLifecycleHelper uiHelper;
+
+    // variables para saber si el servidor responde bien o no
     public static boolean like_enviado = false;
     public static boolean dislike_enviado = false;
     public static String id_usuario = "";
@@ -119,17 +121,14 @@ public class DetailActivity extends FragmentActivity {
 		}
 
 		@Override
-		public Fragment getItem(int position) {
-
+		public Fragment getItem(int position)
+        {
 			DetailFragment frag = new DetailFragment();
-
 			Bundle bundle = new Bundle();
 			bundle.putSerializable("feed", feed);
 			bundle.putInt("pos", position);
 			frag.setArguments(bundle);
-
 			return frag;
-
 		}
 
 	}
@@ -251,6 +250,8 @@ public class DetailActivity extends FragmentActivity {
         uiHelper.onDestroy();
     }
 
+    // esta funcion se encarga del proceso de enviar el like al servidor
+    // dichos likes seran luego usados para un analisis
     public void like(View view)
     {
         Intent intent = getIntent();
@@ -290,6 +291,9 @@ public class DetailActivity extends FragmentActivity {
 
     }
 
+    // esta funcion se encarga del proceso de enviar el dislike al servidor
+    // dichos likes seran luego usados para un analisis, luego hace uso de la
+    // clase asincrona EnviarDislike
     public void dislike(View view)
     {
         Intent intent = getIntent();
@@ -329,6 +333,8 @@ public class DetailActivity extends FragmentActivity {
 
     }
 
+    // esta clase se encarga de enviar los likes al servidor
+    // hace uso de los atributos declarados en la clase principal
     public class EnviarLike extends AsyncTask<Void, Void, Void>
     {
         @Override
@@ -384,6 +390,9 @@ public class DetailActivity extends FragmentActivity {
         }
     }
 
+    // esta clase se encarga de enviar los dislikes al servidor
+    // hace uso de los atributos declarados en la clase principal
+    // y asi se puede saber si funcionaron las cosas
     public class EnviarDislike extends AsyncTask<Void, Void, Void>
     {
         @Override
@@ -439,6 +448,8 @@ public class DetailActivity extends FragmentActivity {
         }
     }
 
+    // esta funcion indica de que categoria es una fuente
+    // en especifico
     public String obtenerCategoria(String nombre)
     {
         String categoria = "";

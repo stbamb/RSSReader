@@ -43,6 +43,7 @@ public class AddActivity extends Activity
     private static ArrayList<String> lista_categorias;
 
     // variables usadas para enviar subscripciones
+    // y para escuchar las respuestas del servidor
     public static String respuesta_servidor_envio_subscripciones = "";
     public static boolean proceso_subscipcion_enviado = false;
     public static String id_usuario = "";
@@ -61,6 +62,8 @@ public class AddActivity extends Activity
         final List<GroupItem> items = new ArrayList<GroupItem>();
 
         feedLink = new SplashActivity().lista_sources;
+
+        // se obtienen todas las categorias existentes
         lista_categorias = obtenerCategorias();
         int cant_categorias = lista_categorias.size();
 
@@ -77,8 +80,9 @@ public class AddActivity extends Activity
         listView.setVerticalFadingEdgeEnabled(true);
         listView.setAdapter(adapter);
 
-        // In order to show animations, we need to use a custom click handler
-        // for our ExpandableListView.
+        // esto es un listener, de la clase de ListaExpandible
+        // sirve para escuchar cada vez que se presiona uno de sus
+        // elementos para desplegar sus subelementos
         listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
@@ -107,7 +111,6 @@ public class AddActivity extends Activity
 
                 // encuentra la posicion del item seleccionado
                 // y le pone o le quita el check
-
                 ImageView checked_item = (ImageView) v.findViewById(R.id.check);
 
                 ChildItem item = items.get(groupPosition).items.get(childPosition);
@@ -120,7 +123,6 @@ public class AddActivity extends Activity
 
                 // logica, si un elemento ya tenia un check
                 // entonces se quita el check, de lo contrario se pone
-
                 if (checked_item.getVisibility() == View.VISIBLE)
                 {
                     text = "Se ha desubscrito a " + feedLink.get(pos).getNombre(); // para mostrar via Toast a cual feed source le quieto la subscripcion
@@ -174,6 +176,7 @@ public class AddActivity extends Activity
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
 
+            // para volver a la pantalla anterior
             case android.R.id.home:
                 // app icon in action bar clicked; finish activity to go home
                 enviarSubscripciones();
@@ -228,6 +231,8 @@ public class AddActivity extends Activity
 
             int pos = getPosicion(item.title);
 
+            // si el source ya habia sido aceptado, entonces
+            // poner un check y volverlo visible
             if (feedLink.get(pos).isAceptado()) {
                 holder.isChecked.setVisibility(View.VISIBLE);
             }
@@ -354,6 +359,8 @@ public class AddActivity extends Activity
         return pos;
     }
 
+    // funcion que se asegura que antes de salir, todas las nuevas subscripciones se envien
+    // al servidor, esta llama a la clase asincrona
     public void enviarSubscripciones()
     {
         Intent intent = getIntent();
@@ -371,6 +378,8 @@ public class AddActivity extends Activity
 
     }
 
+    // clase que se asegura que antes de salir, todas las nuevas subscripciones se envien
+    // al servidor
     public class Subscribe extends AsyncTask<Void, Void, Void>
     {
         @Override

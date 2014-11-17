@@ -19,7 +19,9 @@ import com.stbam.rssnewsreader.parser.RSSFeed;
 import java.util.Arrays;
 import java.util.List;
 
-public class DetailFragment extends Fragment {
+// fragament, con un pager para pasar las paginas con una animacion especial
+public class DetailFragment extends Fragment
+{
 
     public static int fPos;
     public static int fPos2; // esta variable se usa para saber cual historia publicar a Facebook desde
@@ -65,6 +67,7 @@ public class DetailFragment extends Fragment {
         if (fPos == fFeed.getItemCount() - 2)
             fPos2 += 2;
 
+        // se acomoda el cuerpo de la noticia en el WebView
         title.setText(fFeed.getItem(fPos).getTitle());
         String data = "<html><body><center>" + fFeed.getItem(fPos).getDescription() + "</center></body></html>";
         desc.loadData(data, "text/html; charset=UTF-8", null);

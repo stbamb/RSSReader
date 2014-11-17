@@ -11,22 +11,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.Toast;
 import com.stbam.rssnewsreader.R;
 import com.stbam.rssnewsreader.adapters.GridViewAdapter;
 import com.stbam.rssnewsreader.parser.FeedSource;
 import com.stbam.rssnewsreader.parser.JSONParser;
-import com.stbam.rssnewsreader.parser.RSSFeed;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**
  *
- * http://developer.android.com/guide/topics/ui/layout/gridview.html
+ * tomado de http://developer.android.com/guide/topics/ui/layout/gridview.html
  *
  */
 public class EditorsActivity extends Activity {
@@ -46,8 +42,6 @@ public class EditorsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editors);
 
-
-
         // para poder ir a la actividad anterior
         // sin necesidad de presionar el boton back
         ActionBar actionBar = getActionBar();
@@ -61,6 +55,8 @@ public class EditorsActivity extends Activity {
         while (recoleccion_sources_sin_finalizar)
             abc++;
 
+        // se le asigna la recomendacion a cada elemento
+        // sino tiene entonces se deja en blanco
         for (int i = 0; i < lista_sources.size(); i++) {
 
             if (lista_sources.get(i).getCategoria().toLowerCase().equals("comidas"))
@@ -77,9 +73,10 @@ public class EditorsActivity extends Activity {
                 nombres[2] = nombres[8] = nombres[14] = "La recomendación de esta semana para música es " + lista_sources.get(i).getNombre();
         }
 
+        // un listener en los elementos del arreglo, para que cuando sean presionados
+        // se muestre una alerta, con la recomendacion de EDITORS' CHOICE
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new GridViewAdapter(this));
-
         gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 AlertDialog alertDialog1 = new AlertDialog.Builder(EditorsActivity.this).create();
@@ -100,7 +97,7 @@ public class EditorsActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-
+            // para volver a la pantalla anterior
             case android.R.id.home:
                 // app icon in action bar clicked; finish activity to go home
                 finish();
@@ -109,6 +106,8 @@ public class EditorsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    // obtiene las recomendaciones del servidor
+    // no para un usuario en especial, sino las recomendaciones en general
     private class ObtenerFuentes extends AsyncTask<Void, Void, Void> {
 
         @Override
