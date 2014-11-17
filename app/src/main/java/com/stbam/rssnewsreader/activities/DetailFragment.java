@@ -72,9 +72,6 @@ public class DetailFragment extends Fragment {
         if (fFeed.getItem(fPos).isCompartido())
             compartir.setVisibility(View.INVISIBLE);
 
-        if (fPos == 1 || fPos == 4)
-            compartir.setEnabled(false);
-
         return view;
     }
 

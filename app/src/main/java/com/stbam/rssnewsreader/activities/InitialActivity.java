@@ -120,7 +120,6 @@ public class InitialActivity extends Activity {
         else
         {
             AlertDialog alertDialog1 = new AlertDialog.Builder(InitialActivity.this).create();
-
             alertDialog1.setTitle("RSS Reader");
             alertDialog1.setMessage("Aún no te has registrado.");
             alertDialog1.setButton("OK", new DialogInterface.OnClickListener() {

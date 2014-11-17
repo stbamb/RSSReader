@@ -1,6 +1,7 @@
 package com.stbam.rssnewsreader.logic;
 
 import android.content.SearchRecentSuggestionsProvider;
+import android.provider.SearchRecentSuggestions;
 
 /**
  * Created by Esteban on 11/15/2014.
@@ -12,4 +13,7 @@ public class SugerenciasRecientes extends SearchRecentSuggestionsProvider {
     public SugerenciasRecientes() {
         setupSuggestions(AUTHORITY, MODE);
     }
+
+
+
 }

@@ -41,7 +41,9 @@ public class RSSFeed implements Serializable {
     public RSSItem getItem(int location) {
         if (location < _itemCount)
             return (RSSItem) _itemList.get(location);
-        return (RSSItem) _itemList.get(_itemCount - 1);
+        else if (_itemCount - 1 < 0)
+            return (RSSItem) _itemList.get(_itemCount - 1);
+        return (RSSItem) _itemList.get(0);
     }
 
     public int getItemCount() {

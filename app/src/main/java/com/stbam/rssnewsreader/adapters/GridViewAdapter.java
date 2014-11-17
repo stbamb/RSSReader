@@ -46,8 +46,14 @@ public class GridViewAdapter extends BaseAdapter {
 
     // references to our images
     private Integer[] mThumbIds = {
-            R.drawable.food, R.drawable.gaming,
-            R.drawable.music, R.drawable.news,
-            R.drawable.sports, R.drawable.tech
+            R.drawable.food_category, R.drawable.gaming_category,
+            R.drawable.music_category, R.drawable.news_category,
+            R.drawable.sports_category, R.drawable.tech_category,
+            R.drawable.food_category, R.drawable.gaming_category,
+            R.drawable.music_category, R.drawable.news_category,
+            R.drawable.sports_category, R.drawable.tech_category,
+            R.drawable.food_category, R.drawable.gaming_category,
+            R.drawable.music_category, R.drawable.news_category,
+            R.drawable.sports_category, R.drawable.tech_category
     };
 }

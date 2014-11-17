@@ -158,6 +158,7 @@ public class CategoriesActivity extends ListActivity {
         protected Void doInBackground(Void... arg0) {
 
             JSONParser sh = new JSONParser(new JSONObject());
+            lista_videos.clear();
 
             // Making a request to url and getting response
             String jsonStr = sh.makeServiceCall(url_videos, JSONParser.GET);

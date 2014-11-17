@@ -3,11 +3,17 @@ package com.stbam.rssnewsreader.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -15,6 +21,7 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.stbam.rssnewsreader.R;
+import com.stbam.rssnewsreader.logic.SugerenciasRecientes;
 
 
 public class AccountActivity extends Activity {
@@ -136,5 +143,16 @@ public class AccountActivity extends Activity {
                 }
             }
         });
+    }
+
+    public void borrarHistorial(View v)
+    {
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                SugerenciasRecientes.AUTHORITY, SugerenciasRecientes.MODE);
+        suggestions.clearHistory();
+
+        Toast toast = Toast.makeText(getApplicationContext(), "Historial de búsqueda eliminado", Toast.LENGTH_SHORT);
+        toast.show();
+
     }
 }

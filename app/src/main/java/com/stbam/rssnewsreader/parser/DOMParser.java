@@ -43,7 +43,7 @@ public class DOMParser {
 
         if (xml.equals(theverge) || xml.equals(theverge_burner) || xml.equals(polygon) || xml.equals(polygon_burner))
             leerPolygonYTheVerge(url, nombre);
-        else if (nombre.equals("LifeHacker") || nombre.equals("PhoneArena") || nombre.equals("US Google News") || nombre.equals("ABC News"))
+        else if (nombre.equals("LifeHacker") || nombre.equals("PhoneArena") || nombre.equals("US Google News") || nombre.equals("ABC News") || nombre.equals("Android Central"))
             leerOtrosFeed(url, nombre);
         else
             leerTipoRaro(url, nombre);
@@ -227,7 +227,7 @@ public class DOMParser {
 
                     entry.setTitle(getValue("title", element2));
 
-                    if (nombre.equals("FoodSpin"))
+                    if (nombre.equals("FoodSpin") || nombre.equals("All Music") || nombre.equals("New Release Tuesday"))
                         entry.setDescription(getValue("description", element2));
                     else
                         entry.setDescription(getValue("content:encoded", element2));

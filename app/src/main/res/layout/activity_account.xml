@@ -47,4 +47,14 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:id="@+id/clear_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/authButton2"
+        android:layout_centerHorizontal="true"
+        android:onClick="borrarHistorial"
+        android:text="Limpiar historial de búsquedas" />
+
 </RelativeLayout>
