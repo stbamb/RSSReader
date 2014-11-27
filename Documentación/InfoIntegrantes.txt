@@ -1,16 +1,16 @@
-Este proyecto será elaborado por:
+Este proyecto serÃ¡ elaborado por:
 
-  Nombre                   		Número de carnet
+  Nombre                   		NÃºmero de carnet
 
 
 - Cristian Jimenez Otoya  	-	Carnet: 201227268
-- Esteban Murillo Burford	-   Carnet: 201266821
-- Manfred Torres Sánches    -   Carnet: 201211704
+- Esteban Murillo Burford	  -   Carnet: 201266821
+- Manfred Torres SÃ¡nchez    -   Carnet: 201211704
 
 Curso:
 
 Grupo:  01
 Codigo: IC-8041
-Nombre: Desarrollo de Aplicaciones para Dispositivos Móviles
+Nombre: Desarrollo de Aplicaciones para Dispositivos MÃ³viles
 
 II Semestre, 2014
